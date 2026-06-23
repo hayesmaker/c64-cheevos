@@ -2,11 +2,27 @@
   "name": "c64-cheevos",
   "version": "0.1.0",
   "description": "Open source c64 video game achievements used by C64cade.com and a potential basis for C64 Retroachievements if that ever becomes a thing",
-  "license": "ISC",
+  "license": "MIT",
   "author": "hayesmaker",
-  "type": "commonjs",
-  "main": "index.js",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./cheevos/*": "./src/cheevos/*.js"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "prepack": "npm test"
+  },
+  "dependencies": {
+    "signal-js": "3.0.1"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.8"
   }
 }
