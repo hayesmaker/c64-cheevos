@@ -6,6 +6,7 @@
   "author": "hayesmaker",
   "type": "module",
   "main": "./src/index.js",
+  "repository": "https://github.com/hayesmaker/c64-cheevos",
   "exports": {
     ".": "./src/index.js",
     "./createCheevos": "./src/createCheevos.js",

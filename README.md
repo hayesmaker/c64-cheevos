@@ -15,6 +15,28 @@ For a guide in adding support for your game to the repo follow the Documentation
 
 The usage guide below is for those wishing to use C64-cheevos in their own projects.
 
+## Game Support
+
+| Game | Detector ID | High Scores | Achievements |
+| --- | --- | --- | --- |
+| Beach Head | `beach-head` | [x] | [ ] |
+| Chuckie Egg | `chuckie-egg` | [x] | [ ] |
+| Forbidden Forest | `forbidden-forest` | [ ] | [ ] |
+| Galaga | `galaga` | [x] | [ ] |
+| Gribbly's Day Out | `gribbly` | [x] | [ ] |
+| Hercules | `hercules` | [x] | [ ] |
+| Legend of Wilf | `legend-of-wilf` | [x] | [ ] |
+| Mario's Cement Factory | `mario-cf` | [x] | [x] |
+| Mole Attack | `mole-attack` | [x] | [ ] |
+| Munchy Worm | `munchy-worm` | [x] | [ ] |
+| Park Patrol | `park-patrol` | [x] | [ ] |
+| Potty Pigeon | `potty-pigeon` | [x] | [ ] |
+| Stix | `stix` | [x] | [ ] |
+| Tilt | `tilt` | [x] | [ ] |
+| Up 'n Down | `up-n-down` | [x] | [ ] |
+| Uridium | `uridium` | [x] | [x] |
+| Vegetables Deluxe | `vegetables-deluxe` | [x] | [ ] |
+
 ## Install
 
 ```sh
@@ -81,6 +103,6 @@ const cheevos = await createCheevos(id, options)
 
 Registered detector IDs include values such as `uridium`, `mario-cf`, `tilt`, and `galaga`. Unknown IDs return `CheevoTemplate`.
 
-## Adding A Game Documentation
+## Documentation
 
 - [Writing game class files](docs/game-class-guide.md)
