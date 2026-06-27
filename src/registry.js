@@ -1,0 +1,19 @@
+export const cheevosRegistry = {
+  'beach-head': () => import('./cheevos/BeachHead.js'),
+  'chuckie-egg': () => import('./cheevos/ChuckieEgg.js'),
+  'forbidden-forest': () => import('./cheevos/ForbiddenForest.js'),
+  'galaga': () => import('./cheevos/Galaga.js'),
+  'gribbly': () => import('./cheevos/Gribbly.js'),
+  'hercules': () => import('./cheevos/Hercules.js'),
+  'legend-of-wilf': () => import('./cheevos/LegendOfWilf.js'),
+  'mario-cf': () => import('./cheevos/MariosCementFactory.js'),
+  'mole-attack': () => import('./cheevos/MoleAttack.js'),
+  'munchy-worm': () => import('./cheevos/MunchyWorm.js'),
+  'park-patrol': () => import('./cheevos/ParkPatrol.js'),
+  'potty-pigeon': () => import('./cheevos/PottyPigeon.js'),
+  'stix': () => import('./cheevos/Stix.js'),
+  'tilt': () => import('./cheevos/Tilt.js'),
+  'up-n-down': () => import('./cheevos/UpNDown.js'),
+  'uridium': () => import('./cheevos/Uridium.js'),
+  'vegetables-deluxe': () => import('./cheevos/VegetablesDeluxe.js')
+}

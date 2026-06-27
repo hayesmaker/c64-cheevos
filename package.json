@@ -1,13 +1,15 @@
 {
   "name": "c64-cheevos",
   "version": "0.1.0",
-  "description": "Open source c64 video game achievements used by C64cade.com and a potential basis for C64 Retroachievements if that ever becomes a thing",
+  "description": "Open source c64 video game achievements and high score events library",
   "license": "MIT",
   "author": "hayesmaker",
   "type": "module",
   "main": "./src/index.js",
   "exports": {
     ".": "./src/index.js",
+    "./createCheevos": "./src/createCheevos.js",
+    "./registry": "./src/registry.js",
     "./cheevos/*": "./src/cheevos/*.js"
   },
   "files": [

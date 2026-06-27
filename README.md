@@ -1,24 +1,24 @@
 # c64-cheevos
 
-Open source Commodore 64 high-score and achievement detectors used by C64cade.
+Open source Commodore 64 games achievements and high scores tracking.
 
-Each game class reads C64 memory through injected reader functions and emits score or achievement events. 
-Host applications provide their own persistence callbacks.
+Contributions welcome from C64 game devs who would like to add their games to C64Cade. Or from 
+anyone who would like to see their favourite game added to C64Cade.  C64Cade lets players play
+C64 games with global high score leaderboards and achievements.
+
+Ultimately I hope that one day the emulator devs will pull their thumbs out and add
+support for RetroAchievements.  The game achievements already added here could then be used 
+ in C64 RetroAchievements.
+
+For a guide in adding support for your game to the repo follow the Documentation here: 
+[Writing game class files](docs/game-class-guide.md)
+
+The usage guide below is for those wishing to use C64-cheevos in their own projects.
 
 ## Install
 
 ```sh
 npm install c64-cheevos
-```
-
-During local development you can consume it from a checkout:
-
-```json
-{
-  "dependencies": {
-    "c64-cheevos": "file:../c64-cheevos"
-  }
-}
 ```
 
 ## Usage
@@ -39,7 +39,14 @@ const cheevos = new Uridium({
 
 cheevos.cpuReadNS = (addr) => emulator.cpuReadNS(addr)
 cheevos.ramRead = (addr) => emulator.ramRead(addr)
-cheevos.execute()
+
+// Call execute in a RAF loop to check current RAM for achievements and score / lives / game over updates:
+function update () {
+   cheevos.execute();
+   requestAnimationFrame(update);
+};
+
+requestAnimationFrame(update);
 ```
 
 ## API Contract
@@ -60,3 +67,20 @@ After constructing a class, attach memory-reader methods before calling `execute
 - `ramRead(addr)` where needed
 
 Events are emitted through each instance's `watcher` from `signal-js`.
+
+## Registry Factory
+
+Host applications can avoid their own game switch statements by using `createCheevos`:
+
+```js
+import { createCheevos } from 'c64-cheevos'
+
+const id = 'uridium'
+const cheevos = await createCheevos(id, options)
+```
+
+Registered detector IDs include values such as `uridium`, `mario-cf`, `tilt`, and `galaga`. Unknown IDs return `CheevoTemplate`.
+
+## Adding A Game Documentation
+
+- [Writing game class files](docs/game-class-guide.md)
