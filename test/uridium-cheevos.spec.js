@@ -25,6 +25,7 @@ describe('Uridium Cheevos', () => {
       thumbnailUrl: 'fake.image.url/zinc.png',
     });
     const uridium = new Uridium({ gameId, user, cheevosSet, poppedCheevos, popCheevo });
+    //return the expected memory state for level 1 completion
     uridium.cpuReadNS = vi.fn((addr) => {
       if (addr === 0x0026) return 1; // MEM_LEVEL
       if (addr === 0x0096) return 23; // MEM_LEVEL_STATE
