@@ -18,24 +18,24 @@ The usage guide below is for those wishing to use C64-cheevos in their own proje
 ## Game Support
 
 | Game | Detector ID | High Scores | Achievements |
-| --- | --- | --- | --- |
-| Beach Head | `beach-head` | [x] | [ ] |
-| Chuckie Egg | `chuckie-egg` | [x] | [ ] |
-| Forbidden Forest | `forbidden-forest` | [ ] | [ ] |
-| Galaga | `galaga` | [x] | [ ] |
-| Gribbly's Day Out | `gribbly` | [x] | [ ] |
-| Hercules | `hercules` | [x] | [ ] |
-| Legend of Wilf | `legend-of-wilf` | [x] | [ ] |
-| Mario's Cement Factory | `mario-cf` | [x] | [x] |
-| Mole Attack | `mole-attack` | [x] | [ ] |
-| Munchy Worm | `munchy-worm` | [x] | [ ] |
-| Park Patrol | `park-patrol` | [x] | [ ] |
-| Potty Pigeon | `potty-pigeon` | [x] | [ ] |
-| Stix | `stix` | [x] | [ ] |
-| Tilt | `tilt` | [x] | [ ] |
-| Up 'n Down | `up-n-down` | [x] | [ ] |
-| Uridium | `uridium` | [x] | [x] |
-| Vegetables Deluxe | `vegetables-deluxe` | [x] | [ ] |
+| --- | --- |-------------| --- |
+| Beach Head | `beach-head` | [x]         | [ ] |
+| Chuckie Egg | `chuckie-egg` | [x]         | [ ] |
+| Forbidden Forest | `forbidden-forest` | [ ]         | [ ] |
+| Galaga | `galaga` | [x]         | [ ] |
+| Gribbly's Day Out | `gribbly` | [x]         | [ ] |
+| Hercules | `hercules` | [x]         | [ ] |
+| Legend of Wilf | `legend-of-wilf` | [x]         | [ ] |
+| Mario's Cement Factory | `mario-cf` | [x]         | [x] |
+| Mole Attack | `mole-attack` | [x]         | [ ] |
+| Munchy Worm | `munchy-worm` | [x]         | [ ] |
+| Park Patrol | `park-patrol` | [ ]         | [ ] |
+| Potty Pigeon | `potty-pigeon` | [x]         | [ ] |
+| Stix | `stix` | [x]         | [ ] |
+| Tilt | `tilt` | [x]         | [ ] |
+| Up 'n Down | `up-n-down` | [x]         | [ ] |
+| Uridium | `uridium` | [x]         | [x] |
+| Vegetables Deluxe | `vegetables-deluxe` | [x]         | [ ] |
 
 ## Install
 
