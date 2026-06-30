@@ -1,25 +1,23 @@
 import signal from 'signal-js'
-import { convertMemToScoreDigits } from '../helpers/string-utils.js'
 
-//used
-const MEM_LIVES = 0x8a34
-const MEM_SCORE_1 = 0x815b
-const MEM_SCORE_2 = 0x815a
-const MEM_SCORE_3 = 0x8159
-const MEM_SCORE_4 = 0x8158
- // [1f::in titles|13::on game over]
-const GAME_OVER_FLAG = 0x00d8  
-// [0e::game starts|06::in game|various in titles]
-//const NEW_GAME_FALG = 0x00d7   
-//unused - will be needed for some cheevos
-const ENEMY_HITS = 0x8fd0 
-const ENEMY_HITS_HI = 0x8fd1 
-const BULLETS_FIRED = 0x8fc6 
-const BULLETS_FIRED_HI = 0x8fc7
+const MEM_SCORE_0 = 0x002a
+const MEM_SCORE_1 = 0x002b
+const MEM_SCORE_2 = 0x002c
+const MEM_SCORE_3 = 0x002d
+const MEM_GAME_START_STATE = 0x0055
+const MEM_LIVES = 0x005f
+const MEM_DIFFICULTY = 0x0069
+
+const DIFFICULTY_GAME_MODES = {
+  0x04: 0,
+  0x08: 1,
+  0x0c: 2,
+  0x10: 3
+}
 
 class ForbiddenForest {
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
-    this.name = 'Galaga'
+    this.name = 'Forbidden Forest'
     console.log(`${this.name}::Constructor`, gameId)
     this._popCheevo = popCheevo
     this.postScore = postScore
@@ -47,6 +45,7 @@ class ForbiddenForest {
   resetGameVars() {
     this.score = 0
     this.lives = 0
+    this.gameMode = 0
     this.isGameOver = true
   }
 
@@ -54,43 +53,46 @@ class ForbiddenForest {
     this.isGameOver = false
     this.score = this.getScore()
     this.lives = this.getLives()
-    console.log('Started New Game', this.score, this.lives)
+    this.gameMode = this.getGameMode()
+    console.log('Started New Game', this.score, this.lives, this.gameMode)
   }
 
   getScore() {
-    const score1 = convertMemToScoreDigits(MEM_SCORE_1, this)
-    const score2 = convertMemToScoreDigits(MEM_SCORE_2, this)
-    const score3 = convertMemToScoreDigits(MEM_SCORE_3, this)
-    const score4 = convertMemToScoreDigits(MEM_SCORE_4, this)
-    return parseInt(score1 + score2 + score3 + score4, 10)
+    const b0 = this.cpuReadNS(MEM_SCORE_0)
+    const b1 = this.cpuReadNS(MEM_SCORE_1)
+    const b2 = this.cpuReadNS(MEM_SCORE_2)
+    const b3 = this.cpuReadNS(MEM_SCORE_3)
+    const digits = [
+      b3 >> 4, b3 & 0x0f,
+      b2 >> 4, b2 & 0x0f,
+      b1 >> 4, b1 & 0x0f,
+      b0 >> 4, b0 & 0x0f
+    ]
+
+    return Number(digits.join(''))
   }
 
   getLives() {
-    return parseInt(this.cpuReadNS(MEM_LIVES).toString(16), 10)
+    return this.cpuReadNS(MEM_LIVES)
+  }
+
+  getGameMode() {
+    return DIFFICULTY_GAME_MODES[this.cpuReadNS(MEM_DIFFICULTY)] ?? 0
   }
 
   endGameCheck() {
-    if (!this.isGameOver) {
-      console.log('endGameCheck', this.isGameOver, this.cpuReadNS(GAME_OVER_FLAG))
-    }
-    //console.log('endGameCheck', this.isGameOver, this.cpuReadNS(GAME_OVER_FLAG))
-    return !this.isGameOver &&
-       this.cpuReadNS(GAME_OVER_FLAG) === 19;
+    return !this.isGameOver && this.getLives() === 0
   }
 
   newGameCheck() {
-    if (this.isGameOver) {
-      console.log('newGameCheck', this.isGameOver, this.cpuReadNS(GAME_OVER_FLAG))
-    }
-    return this.isGameOver &&
-      this.cpuReadNS(GAME_OVER_FLAG) === 16;
+    return this.isGameOver && this.getLives() > 0 && this.cpuReadNS(MEM_GAME_START_STATE) === 1
   }
 
   execute() {
     const currentScore = this.getScore()
-    if (currentScore !== this.score) {
+    if (currentScore !== this.score && !this.isGameOver) {
       this.score = currentScore
-      console.log(`${this.name}.score=`, this.score)
+      // console.log(`${this.name}.score=`, this.score)
     }
 
     if (this.newGameCheck()) {
@@ -103,6 +105,7 @@ class ForbiddenForest {
       console.log('lives=', this.lives)
     }
     if (this.endGameCheck()) {
+      console.log('Game Over! Final Score:', this.score);
       this.isGameOver = true
       this.watcher.dispatch('gameOver', {
         score: this.score
@@ -111,7 +114,8 @@ class ForbiddenForest {
         this.gameId,
         this.score,
         this.user.id,
-        this.user.username
+        this.user.username,
+        this.gameMode
       ).then(res => {
         console.log('Score posted successfully', res)
 

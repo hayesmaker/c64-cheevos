@@ -1,26 +1,22 @@
 # Forbidden Forest C64 Memory Dump Notes
 
-Best-effort memory address guesses from comparing these 64 KiB save-state memory dumps:
-
-- `forbidden-forest_mem-titles.bin`: title screen
-- `forbidden-forest_mem-in-game1.bin`: in game, 0 points, max lives
-- `forbidden-forest_mem-in-game2.bin`: in game, observed as 2000 points
-- `forbidden-forest_mem-in-game3.bin`: in game, observed as 3000 points
-- `forbidden-forest_mem-in-game4.bin`: in game, observed as 4000 points
-
-The score values in the dumps suggest `in-game2` is likely 2000 points rather than 1000 points. This is based on both the packed score bytes and the visible screen RAM score digit.
+The score values in the dumps suggest `in-game2` is likely 2000 points rather than 1000 points. This is based on both
+the packed score bytes and the visible screen RAM score digit.
 
 ## Memory Map Candidates
 
-| Purpose | Address | Confidence | Notes |
-|---|---:|---:|---|
-| Score | `$002A-$002D` | High | Packed BCD-style score, low-to-high byte order. |
-| Score thousands / coarse score progress | `$0041` | Medium-high | Values match visible thousands digit/progression: `00`, `02`, `03`, `04`. |
-| Rendered score on screen | `$07C3-$07CA` | High | Screen RAM status-line score using custom digit characters. `$10 = 0`, `$11 = 1`, `$12 = 2`, etc. |
-| Visible score thousands digit | `$07C7` | High | Changes from `$10` to `$12`, `$13`, `$14` across score dumps. Rendered display only. |
-| Game started / in-game flag candidate | `$0050` | Medium | Title has `$02`; all provided in-game dumps have `$00`. Heavily referenced by code, so may also be a state/timer variable. |
-| Game started / mode flag candidate | `$0036` | Medium | Title has `$15`; all provided in-game dumps have `$0C`. |
-| Lives | Unknown | Low | No provided dump appears to vary lives, so lives cannot be isolated confidently. |
+| Purpose                                 |       Address |  Confidence | Notes                                                                                                                      |
+|-----------------------------------------|--------------:|------------:|----------------------------------------------------------------------------------------------------------------------------|
+| Score                                   | `$002A-$002D` |        High | Packed BCD-style score, low-to-high byte order.                                                                            |
+| Score thousands / coarse score progress |       `$0041` | Medium-high | Values match visible thousands digit/progression: `00`, `02`, `03`, `04`.                                                  |
+| Rendered score on screen                | `$07C3-$07CA` |        High | Screen RAM status-line score using custom digit characters. `$10 = 0`, `$11 = 1`, `$12 = 2`, etc.                          |
+| Visible score thousands digit           |       `$07C7` |        High | Changes from `$10` to `$12`, `$13`, `$14` across score dumps. Rendered display only.                                       |
+| Game started / in-game flag candidate   |       `$0050` |      Medium | Title has `$02`; all provided in-game dumps have `$00`. Heavily referenced by code, so may also be a state/timer variable. |
+| Game started / mode flag candidate      |       `$0036` |      Medium | Title has `$15`; all provided in-game dumps have `$0C`.                                                                    |
+| Player-control start state              |       `$0055` |        High | After difficulty selection this starts at `5` and counts down. Player control starts when it reaches `1`.                   |
+| Lives                                   |       `$005f` |        High | Lives start at 3, and are reset after each successful battle                                                               |
+| Difficulty / game mode                  |       `$0069` |        High | Values map cleanly to C64Cade game modes: `$04`, `$08`, `$0C`, `$10` => `0`, `1`, `2`, `3`.                                |
+| Difficulty sanity check                 |       `$006A` |      Medium | Values increase with difficulty: `$06`, `$0B`, `$10`, `$15`. Useful as a secondary check if needed.                         |
 
 ## Score Encoding
 
@@ -109,7 +105,8 @@ This supports the interpretation that the later dumps are 2000, 3000, and 4000 p
 
 ## Game Started / In-Game Flag Candidates
 
-No single definitive game-start flag was proven, but these two addresses cleanly distinguish the provided title dump from all provided in-game dumps:
+No single definitive game-start flag was proven, but these two addresses cleanly distinguish the provided title dump
+from all provided in-game dumps:
 
 ```text
 $0050:
@@ -133,30 +130,92 @@ Suggested heuristic:
 const gameStarted = mem[0x0050] === 0x00 && mem[0x0036] === 0x0c;
 ```
 
-`$0050` is referenced heavily by game code and may be a local state/timer variable rather than a pure global game-start flag. `$0036` also looks like a state/mode value. Using both together should be safer than relying on one address.
+`$0050` is referenced heavily by game code and may be a local state/timer variable rather than a pure global game-start
+flag. `$0036` also looks like a state/mode value. Using both together should be safer than relying on one address.
+
+Later testing found `$0055` is a better start gate for high-score tracking. After the player selects difficulty, lives are
+set before gameplay begins. `$0055` starts at `5` during the title/cutscene state and counts down over time. Player control
+starts when `$0055` reaches `1`.
+
+The current detector starts a new tracked run only when both conditions are true:
+
+```js
+const gameStarted = mem[0x005f] > 0 && mem[0x0055] === 1;
+```
 
 ## Lives
 
-Lives could not be isolated from these dumps. All in-game dumps were described as max lives, and none clearly varies only with lives.
+Lives are stored at `$005F`.
 
-To identify lives confidently, capture at least one additional dump after losing exactly one life. Ideally capture:
+Observed values:
 
 ```text
-same level/scene
-same or near-same score
-one fewer life
+difficulty-select: $005F = 00
+in-game:           $005F = 03
 ```
 
-Then compare it against `forbidden-forest_mem-in-game1.bin` or another close baseline.
+The current high-score detector uses lives plus player-control state for start detection, and lives for game-over detection:
+
+```js
+const gameStarted = mem[0x005f] > 0 && mem[0x0055] === 1;
+const gameOver = mem[0x005f] === 0;
+```
+
+The game appears to reset lives after each successful battle, so this should be treated as a practical high-score submission heuristic rather than a complete model of player state.
+
+## Difficulty / Game Mode
+
+Difficulty is not printed to screen, so the detector uses internal zero-page values.
+
+The strongest candidate is `$0069`. It forms a clean `difficulty * 4` pattern across the four in-game difficulty dumps:
+
+| Difficulty | In-game Name | `$0069` | C64Cade `gameMode` |
+|------------|--------------|--------:|-------------------:|
+| 1          | `innocent`   |   `$04` |                  0 |
+| 2          | `trooper`    |   `$08` |                  1 |
+| 3          | `dare devil` |   `$0C` |                  2 |
+| 4          | `crazy`      |   `$10` |                  3 |
+
+The current detector reads `$0069` when a new game starts and stores the mapped value as `gameMode`, then passes that as the fifth argument to `postScore`.
+
+Secondary difficulty-related candidates were found in `$0068-$006F`:
+
+| Address | Select | Difficulty 1 | Difficulty 2 | Difficulty 3 | Difficulty 4 | Notes |
+|---------|-------:|-------------:|-------------:|-------------:|-------------:|-------|
+| `$0068` |  `$00` |        `$7F` |        `$6A` |        `$54` |        `$40` | Monotonic decreasing; likely difficulty-derived gameplay parameter. |
+| `$0069` |  `$8D` |        `$04` |        `$08` |        `$0C` |        `$10` | Primary game mode candidate. |
+| `$006A` |  `$CF` |        `$06` |        `$0B` |        `$10` |        `$15` | Secondary sanity-check candidate. |
+| `$006B` |  `$D0` |        `$0D` |        `$18` |        `$21` |        `$2A` | Difficulty-derived parameter. |
+| `$006C` |  `$00` |        `$0F` |        `$1A` |        `$24` |        `$2E` | Difficulty-derived parameter. |
+| `$006D` |  `$00` |        `$11` |        `$1C` |        `$26` |        `$31` | Difficulty-derived parameter. |
+| `$006E` |  `$00` |        `$13` |        `$1E` |        `$29` |        `$35` | Difficulty-derived parameter. |
+| `$006F` |  `$00` |        `$15` |        `$20` |        `$2B` |        `$37` | Difficulty-derived parameter. |
+
+`$0069` and `$006A` may be difficulty-derived gameplay parameters rather than a literal selected-difficulty variable. They are still suitable for C64Cade score routing because they are stable immediately after game start in the captured dumps.
 
 ## Practical Recommendations
 
-For high-score detection, use `$002A-$002D` rather than screen RAM. Screen RAM at `$07C3-$07CA` is useful for validation but is only the rendered display.
+For high-score detection, use `$002A-$002D` rather than screen RAM. Screen RAM at `$07C3-$07CA` is useful for validation
+but is only the rendered display.
 
-For game-start detection, start with:
+For game-start and game-over detection, use lives plus the player-control start state:
 
 ```js
-const gameStarted = mem[0x0050] === 0x00 && mem[0x0036] === 0x0c;
+const gameStarted = mem[0x005f] > 0 && mem[0x0055] === 1;
+const gameOver = mem[0x005f] === 0;
+```
+
+For C64Cade game mode routing:
+
+```js
+const gameModeMap = {
+  0x04: 0, // innocent
+  0x08: 1, // trooper
+  0x0c: 2, // dare devil
+  0x10: 3, // crazy
+};
+
+const gameMode = gameModeMap[mem[0x0069]] ?? 0;
 ```
 
 For score parsing:

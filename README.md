@@ -15,13 +15,16 @@ For a guide in adding support for your game to the repo follow the Documentation
 
 The usage guide below is for those wishing to use C64-cheevos in their own projects.
 
-## Game Support
+## Games Support
+
+All games with high score checkmarks are available to play in [C64Cade](https://c64cade.com) with global high score leaderboards.  
+All games with achievement checkmarks have achievements that can be unlocked in [C64Cade](https://c64cade.com).  
 
 | Game                   | Detector ID         | High Scores | Achievements |
 |------------------------|---------------------|-------------|--------------|
 | Beach Head             | `beach-head`        | ✅           | ❌            |
 | Chuckie Egg            | `chuckie-egg`       | ✅           | ❌            |
-| Forbidden Forest       | `forbidden-forest`  | ❌           | ❌            |
+| Forbidden Forest       | `forbidden-forest`  | ✅           | ❌            |
 | Galaga                 | `galaga`            | ✅           | ❌            |
 | Gribbly's Day Out      | `gribbly`           | ✅           | ❌            |
 | Hercules               | `hercules`          | ✅           | ❌            |
@@ -40,7 +43,12 @@ The usage guide below is for those wishing to use C64-cheevos in their own proje
 ## Install
 
 ```sh
+- Link to this repo in your project and run:
 npm install c64-cheevos
+
+- In development you can install from c64-cheevos file path:
+//package.json:
+"c64-cheevos": "file:../../../c64-cheevos"
 ```
 
 ## Usage

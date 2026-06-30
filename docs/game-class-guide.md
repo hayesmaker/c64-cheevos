@@ -1,3 +1,11 @@
+# Dumping Memory from C64Debugger
+Note: in C64 Debugger, use `Ctrl+U` for C64 memory dumps. `Ctrl+Shift+U` dumps 1541 disk drive memory, which is not 
+useful for these game-state addresses.
+
+Dumps at specific game states can be fed to AI to help identify memory addresses for score, lives, level, and game-over detection, as well as other in game events
+for achievements.
+
+
 # Writing Game Class Files
 
 Game classes live in `src/cheevos` and are responsible for polling C64 memory, tracking game state, submitting final scores, and popping achievements. Each class exposes an `execute()` method that the host calls repeatedly while the emulator is running.
