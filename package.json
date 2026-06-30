@@ -1,6 +1,6 @@
 {
   "name": "c64-cheevos",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Open source c64 video game achievements and high score events library",
   "license": "MIT",
   "author": "hayesmaker",
