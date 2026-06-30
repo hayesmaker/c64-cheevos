@@ -1,7 +1,6 @@
 # Forbidden Forest C64 Memory Dump Notes
 
-The score values in the dumps suggest `in-game2` is likely 2000 points rather than 1000 points. This is based on both
-the packed score bytes and the visible screen RAM score digit.
+Investigating Forbidden Forest memory addresses for high-score detection and C64Cade integration.
 
 ## Memory Map Candidates
 
