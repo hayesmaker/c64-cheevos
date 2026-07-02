@@ -1,4 +1,5 @@
 import signal from 'signal-js'
+import { camelize } from '../helpers/string-utils.js'
 
 const MEM_SCORE_0 = 0x002a
 const MEM_SCORE_1 = 0x002b
@@ -29,7 +30,97 @@ class ForbiddenForest {
       const hasPopped = poppedCheevos.some((p) => {
         return p.achievement._id === c._id
       })
-      let checkFn = () => {
+      let checkFn;
+      console.log('cheevo %s', i, camelize(c.title));
+      switch(camelize(c.title)) {
+        case 'firstDance':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'beeUrself':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'froggerNotLikeThis':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'dragonBreed':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'fantomas':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'whyDidItHaveToBeSnakes':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'demogorgonParty':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'ultimateMaster':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'perfectSpiders':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'perfectBees':
+          checkFn = () => {
+            return false;
+          }
+        case 'perfectFrogs':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'perfectDragons':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'oneShotPhantom':
+          checkFn = () => {
+            return false;
+          }
+        break;
+        case 'oneShotSnake':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'oneShotDemogorgon':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'undeadSlayer':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        case 'skinTheDragon':
+          checkFn = () => {
+            return false;
+          }
+          break;
+        default:
+          checkFn = () => {}
+          break;
+        
       }
       return {
         title: c.title,
@@ -115,10 +206,8 @@ class ForbiddenForest {
         this.score,
         this.user.id,
         this.user.username,
-        this.gameMode
       ).then(res => {
         console.log('Score posted successfully', res)
-
         this.watcher.dispatch('cheevo', {
           title: `Score Submit Success`,
           message: `Your score of ${this.score} has been submitted to the ${this.name} Leaderboard!`
