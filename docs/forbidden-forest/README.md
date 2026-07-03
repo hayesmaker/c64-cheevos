@@ -7,7 +7,10 @@ Investigating Forbidden Forest memory addresses for high-score detection and C64
 | Purpose                                 |       Address |  Confidence | Notes                                                                                                                      |
 |-----------------------------------------|--------------:|------------:|----------------------------------------------------------------------------------------------------------------------------|
 | Score                                   | `$002A-$002D` |        High | Packed BCD-style score, low-to-high byte order.                                                                            |
-| Score thousands / coarse score progress |       `$0041` | Medium-high | Values match visible thousands digit/progression: `00`, `02`, `03`, `04`.                                                  |
+| Enemy kill/progression counter          |       `$0041` |        High | Tracks cumulative wave progress. Subtract the current wave baseline at `$005E` to get kills in the active enemy wave.       |
+| Arrows remaining                        |       `$0027` |        High | Starts at `50` for a fresh quiver. Arrows fired can be tracked as `startValue - currentValue`.                              |
+| Current enemy type                      |       `$004E` |        High | Bit-like enemy identifiers: spiders `$01`, bees `$02`, frogs `$04`, dragons `$08`.                                          |
+| Current enemy wave baseline             |       `$005E` |        High | Baseline for `$0041`; active-wave kills are `$0041 - $005E`.                                                               |
 | Rendered score on screen                | `$07C3-$07CA` |        High | Screen RAM status-line score using custom digit characters. `$10 = 0`, `$11 = 1`, `$12 = 2`, etc.                          |
 | Visible score thousands digit           |       `$07C7` |        High | Changes from `$10` to `$12`, `$13`, `$14` across score dumps. Rendered display only.                                       |
 | Game started / in-game flag candidate   |       `$0050` |      Medium | Title has `$02`; all provided in-game dumps have `$00`. Heavily referenced by code, so may also be a state/timer variable. |
@@ -57,17 +60,66 @@ Digits:
 00 00 20 00 => 00002000
 ```
 
-## Score-Related Evidence
+## Enemy Kill / Wave Progress Evidence
 
-The zero-page score/progress candidate `$0041` tracks the visible thousands digit:
+The strongest current enemy kill/progress candidate is `$0041`. It is not a plain per-enemy kill counter; it tracks cumulative wave progress. Use `$005E` as the active wave baseline, then subtract it from `$0041`:
 
-```text
-titles:   $0041 = 00
-in-game1: $0041 = 00
-in-game2: $0041 = 02
-in-game3: $0041 = 03
-in-game4: $0041 = 04
+```js
+const activeEnemyKills = mem[0x0041] - mem[0x005e];
 ```
+
+`$004E` identifies the active enemy wave:
+
+| Enemy | `$004E` | `$005E` baseline | Innocent kills required |
+|-------|--------:|-----------------:|------------------------:|
+| Spiders | `$01` | `0` | `4` |
+| Bees | `$02` | `5` | `1` |
+| Frogs | `$04` | `7` | `6` |
+| Dragons | `$08` | `14` | `1` |
+
+The kills required above are only for the easiest skill setting, `innocent`. Higher skill settings require different kill counts.
+
+Observed active-wave kill counts from the named dumps:
+
+| Dump | `$0041` | `$005E` | Active kills |
+|------|--------:|--------:|-------------:|
+| `spiders-0-kills-0-shots.bin` | `0` | `0` | `0` |
+| `spiders-1-kills-1-shots.bin` | `1` | `0` | `1` |
+| `spiders-2-kills-2-shots.bin` | `2` | `0` | `2` |
+| `frogs-0-kills-0-shots.bin` | `7` | `7` | `0` |
+| `frogs-2-kills-2-shots.bin` | `9` | `7` | `2` |
+| `frogs-5-kills-5-shots.bin` | `12` | `7` | `5` |
+
+Celebration dumps appear to be taken after transition to the next enemy wave. For example, `frogs-6-kills-celebration.bin` has `$0041 = 14`, `$005E = 14`, and `$004E = $08`, which means it has already advanced to dragons.
+
+## Arrows Evidence
+
+`$0027` is the best arrow counter found so far. It stores arrows remaining, not arrows fired.
+
+For a fresh wave with a full quiver:
+
+```js
+const arrowsFired = 50 - mem[0x0027];
+```
+
+For live achievement tracking, use the value at the start of the current wave as the baseline because later wave dumps can start below `50` depending on capture timing:
+
+```js
+const arrowsFiredThisWave = waveStartArrows - mem[0x0027];
+```
+
+Spider dump evidence:
+
+| Dump | Named shots | `$0027` arrows remaining | Arrows fired from 50 |
+|------|------------:|-------------------------:|---------------------:|
+| `spiders-0-kills-0-shots.bin` | `0` | `50` | `0` |
+| `spiders-1-kills-1-shots.bin` | `1` | `49` | `1` |
+| `spiders-2-kills-2-shots.bin` | `2` | `48` | `2` |
+| `spiders-3-kills-4-shots.bin` | `4` | `46` | `4` |
+
+Frog dumps also support `$0027` as arrows remaining, but some begin at `49` instead of `50`, likely because the snapshot was taken after an arrow load/fire state had already consumed one arrow.
+
+## Score-Related Evidence
 
 The visible score area on the bottom status row is at `$07C3-$07CA`:
 
@@ -215,6 +267,26 @@ const gameModeMap = {
 };
 
 const gameMode = gameModeMap[mem[0x0069]] ?? 0;
+```
+
+For active enemy wave and kill tracking:
+
+```js
+const enemyType = mem[0x004e];
+const activeEnemyKills = mem[0x0041] - mem[0x005e];
+
+const enemyTypeMap = {
+  0x01: 'spiders',
+  0x02: 'bees',
+  0x04: 'frogs',
+  0x08: 'dragons'
+};
+```
+
+For arrows fired in the current wave, capture `$0027` when the wave starts and compare future reads against that baseline:
+
+```js
+const arrowsFiredThisWave = waveStartArrows - mem[0x0027];
 ```
 
 For score parsing:
