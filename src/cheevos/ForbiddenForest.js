@@ -8,6 +8,8 @@ const MEM_SCORE_3 = 0x002d
 const MEM_GAME_START_STATE = 0x0055
 const MEM_LIVES = 0x005f
 const MEM_DIFFICULTY = 0x0069
+const CURRENT_ENEMY_TYPE = 0x004e
+
 
 const DIFFICULTY_GAME_MODES = {
   0x04: 0,
@@ -16,9 +18,19 @@ const DIFFICULTY_GAME_MODES = {
   0x10: 3
 }
 
+const ENEMIES = {
+  SPIDERS: 1,
+  BEES: 2,
+  FROGS: 4,
+  DRAGONS: 8,
+  PHANTOM: 10,
+  SNAKE: 20,
+  DEMOGORGON: 40,
+}
+
 class ForbiddenForest {
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
-    this.name = 'Forbidden Forest'
+    this.name = 'Forbidden Forest(dev)'
     console.log(`${this.name}::Constructor`, gameId)
     this._popCheevo = popCheevo
     this.postScore = postScore
@@ -35,7 +47,7 @@ class ForbiddenForest {
       switch(camelize(c.title)) {
         case 'firstDance':
           checkFn = () => {
-            return false;
+            return this.cpuReadNS(CURRENT_ENEMY_TYPE) === 2 && this.cpuReadNS(MEM_DIFFICULTY) >= 1;
           }
           break;
         case 'beeUrself':
@@ -214,14 +226,16 @@ class ForbiddenForest {
         })
       })
     }
+    if (!this.isGameOver) {
+      this.cheevosMap.forEach(c => {
+        if (!c.isPopped && c.check()) {
+          c.isPopped = true
+          console.log('Pop Cheevo::', c.title, c.message)
+          this.popCheevo(c.cheevoId)
+        }
+      })
 
-    this.cheevosMap.forEach(c => {
-      if (!c.isPopped && c.check()) {
-        c.isPopped = true
-        console.log('Pop Cheevo::', c.title, c.message)
-        this.popCheevo(c.cheevoId)
-      }
-    })
+    }
   }
 
   async popCheevo(cId) {
