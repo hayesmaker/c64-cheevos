@@ -10,12 +10,14 @@ const MEM_LIVES = 0x005f
 const MEM_DIFFICULTY = 0x0069
 const CURRENT_ENEMY_TYPE = 0x004e
 
+const WAVE_BASELINE = 0x005e
+const CURRENT_KILLS = 0x0041
 
 const DIFFICULTY_GAME_MODES = {
-  0x04: 0,
-  0x08: 1,
-  0x0c: 2,
-  0x10: 3
+  0x04: 0, // INNOCENT 
+  0x08: 1, // TROOPER
+  0x0c: 2, // DAREDEVIL
+  0x10: 3  // CRAZY
 }
 
 const ENEMIES = {
@@ -30,7 +32,7 @@ const ENEMIES = {
 
 class ForbiddenForest {
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
-    this.name = 'Forbidden Forest(dev)'
+    this.name = 'Forbidden Forest(dev2)'
     console.log(`${this.name}::Constructor`, gameId)
     this._popCheevo = popCheevo
     this.postScore = postScore
@@ -38,6 +40,9 @@ class ForbiddenForest {
     this.gameId = gameId
     this.watcher = signal()
     this.cheevosSet = cheevosSet
+    
+    
+
     this.cheevosMap = cheevosSet.cheevos.map((c, i) => {
       const hasPopped = poppedCheevos.some((p) => {
         return p.achievement._id === c._id
@@ -47,32 +52,44 @@ class ForbiddenForest {
       switch(camelize(c.title)) {
         case 'firstDance':
           checkFn = () => {
-            return this.cpuReadNS(CURRENT_ENEMY_TYPE) === 2 && this.cpuReadNS(MEM_DIFFICULTY) >= 1;
+            if (this.getGameMode() >= 1) {
+              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === 2 && this.getCurrentKills() === 0;
+            }
           }
           break;
         case 'beeUrself':
           checkFn = () => {
-            return false;
+            if (this.getGameMode() >= 1) {
+              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === 4 && this.getCurrentKills() === 0;
+            }
           }
           break;
         case 'froggerNotLikeThis':
           checkFn = () => {
-            return false;
+            if (this.getGameMode() >= 1) {
+              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === 8 && this.getCurrentKills() === 0;
+            }
           }
           break;
         case 'dragonBreed':
           checkFn = () => {
-            return false;
+            if (this.getGameMode() >= 1) {
+              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === 10 && this.getCurrentKills() === 0;
+            }
           }
           break;
         case 'fantomas':
           checkFn = () => {
-            return false;
+            if (this.getGameMode() >= 1) {
+              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === 20 && this.getCurrentKills() === 0;
+            }
           }
           break;
         case 'whyDidItHaveToBeSnakes':
           checkFn = () => {
-            return false;
+            if (this.getGameMode() >= 1) {
+              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === 40 && this.getCurrentKills() === 0;
+            }
           }
           break;
         case 'demogorgonParty':
@@ -158,6 +175,11 @@ class ForbiddenForest {
     this.lives = this.getLives()
     this.gameMode = this.getGameMode()
     console.log('Started New Game', this.score, this.lives, this.gameMode)
+  }
+
+  getCurrentKills() {
+    console.log('getCurrentKills ', this.cpuReadNS(CURRENT_KILLS) - this.cpuReadNS(WAVE_BASELINE))
+    return this.cpuReadNS(CURRENT_KILLS) - this.cpuReadNS(WAVE_BASELINE)
   }
 
   getScore() {

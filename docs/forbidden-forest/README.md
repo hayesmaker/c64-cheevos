@@ -2,7 +2,56 @@
 
 Investigating Forbidden Forest memory addresses for high-score detection and C64Cade integration.
 
+
+## Gameplay
+
+- 4 skill modes named: "Innocent", "Trooper", "Daredevil" and "Crazy", the user selects starting difficulty at the
+title screen.
+- 1 loop consists of defeating 7 enemy waves, where the player must defeat a number of one enemy type before moving to the next
+enemy.  The number of enemies required to proceed is dependent on skill mode. (see "Scoring / Kill requirements Table" below).
+- The final enemy is the Demogorgon, which must be defeated once on all skill levels.
+- Once defeated the game loops to the first enemy type on the next highest difficulty. 
+- If the player is already on the hardest difficulty "Crazy", then defeats the Demogorgon, I believe the game loops back to
+Spiders on "Innocent" and the game therefore loops forever.
+- The game features a day night cycle, which causes the forest to get darker until almost completely black when night falls.
+- The player has 50 arrows which on Innocent and Trooper difficulty are refilled each new enemy wave. On Daredevil the players
+arrows are only refilled twice in 1 loop (not sure when), and on Crazy arrows are refilled only once. Consuming all 50 arrows in 
+a wave will lead to game over.
+- The player starts with 3 lives and each wave their lives are reset to 3. (Unsure if higher difficulties change this logic).
+
+## Scoring / Kill requirements Table:
+
+| Enemy                   | Points per kill |  Innocent |  Trooper |  Daredevil  | Crazy   |
+|-------------------------|-----------------|-----------|----------|-------------|---------|
+| Spiders                 | 1000            | 4         | 8        | 12          | 16      |
+| Bees                    | 2000            | 1         | 2        | 3           | 4       |
+| Frogs                   | 500             | 6         | 12       | 16          | 20      |
+| Dragons                 | 4000            | 1         | 1        | 2           | 3       |
+| Phantom (+skeletons)    | 6000 (+ 1000**) | 1         | 1        | 1           | 2       |
+| Snake                   | 8000            | 1         | 1        | 2           | 3       |
+| Demogorgon              | 10000           | 1         | 1        | 1           | 1       |
+
+**: When Phantom appears he spawns a skeleton. Killing the skeleton will cause him to span another, infinitely
+until the Phantom is defeated. Skeletons score 1000 points each.
+
+
 ## Memory Map Candidates
+
+Notes on memory updates in game.  The value representing enemy wave baseline only updates when the final enemy of a 
+wave is defeated.  This means that the current enemy kill count will never reach the value equal to the required number
+of kills because it is updated to the baseline number when the final enemy each wave is defeated.  The baseline number
+similarly doesn't get set until the final enemy is defeated.  This means I currently can't see in memory where the
+required kills number is set.  Maybe it is derived from the game mode value.
+
+Also the current wave identifier value is also updated immediately on the death of the final enemy. So currently
+to award achievements for defeating a wave, I am checking that the current wave is equal to the next enemy wave id.
+
+This also makes the current enemy killed calculation ($0041 - $005e) always equal 0 when the final enemy of a wave is
+defeated.
+
+This works up until the final enemy: Demogorgon, because the next wave id will be 40 when fighting the Demogorgon, but 
+will wrap around to 1 immediately when he's defeated. The enemy kill counter will also become 0 which means the 
+win condition for Demogorgon will be the same as starting a new game if using the current logic.
 
 | Purpose                                 |       Address |  Confidence | Notes                                                                                                                      |
 |-----------------------------------------|--------------:|------------:|----------------------------------------------------------------------------------------------------------------------------|
