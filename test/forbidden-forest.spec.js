@@ -91,4 +91,64 @@ describe('Forbidden Forest Cheevos', () => {
       2
     )
   })
+
+  test('pops demogorgonParty on Trooper Demogorgon to Spider transition', () => {
+    const popCheevo = vi.fn().mockResolvedValue({
+      achievement: { title: 'Demogorgon Party', description: 'Defeated Demogorgon' }
+    })
+    const memory = {
+      0x0041: 0x14,
+      0x004e: 0x40,
+      0x0055: 1,
+      0x005e: 0x14,
+      0x005f: 3,
+      0x0069: 0x08
+    }
+    const cheevos = createForbiddenForest(memory, {
+      cheevosSet: {
+        _id: 'set1',
+        cheevos: [{ _id: 'demogorgon-party', title: 'Demogorgon Party', description: 'Defeated Demogorgon' }]
+      },
+      popCheevo
+    })
+
+    cheevos.execute()
+    memory[0x0041] = 0x00
+    memory[0x004e] = 0x01
+    memory[0x005e] = 0x16
+    memory[0x0069] = 0x0c
+    cheevos.execute()
+
+    expect(popCheevo).toHaveBeenCalledWith('set1', 'user1', 'demogorgon-party')
+  })
+
+  test('pops demogorgonParty when Crazy wraps back to Innocent', () => {
+    const popCheevo = vi.fn().mockResolvedValue({
+      achievement: { title: 'Demogorgon Party', description: 'Defeated Demogorgon' }
+    })
+    const memory = {
+      0x0041: 0x14,
+      0x004e: 0x40,
+      0x0055: 1,
+      0x005e: 0x14,
+      0x005f: 3,
+      0x0069: 0x10
+    }
+    const cheevos = createForbiddenForest(memory, {
+      cheevosSet: {
+        _id: 'set1',
+        cheevos: [{ _id: 'demogorgon-party', title: 'Demogorgon Party', description: 'Defeated Demogorgon' }]
+      },
+      popCheevo
+    })
+
+    cheevos.execute()
+    memory[0x0041] = 0x00
+    memory[0x004e] = 0x01
+    memory[0x005e] = 0x00
+    memory[0x0069] = 0x04
+    cheevos.execute()
+
+    expect(popCheevo).toHaveBeenCalledWith('set1', 'user1', 'demogorgon-party')
+  })
 })
