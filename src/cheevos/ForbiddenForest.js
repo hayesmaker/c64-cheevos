@@ -21,19 +21,27 @@ const DIFFICULTY_GAME_MODES = {
   0x10: 3  // CRAZY
 }
 
+const GAME_MODES = {
+  INNOCENT: 0x04,
+  TROOPER: 0x08,
+  DAREDEVIL: 0x0c,
+  CRAZY: 0x10,
+}
+
+// Use Decimal values for cpuReadNs comparisons.
 const ENEMIES = {
-  SPIDERS: 0x01,
-  BEES: 0x02,
-  FROGS: 0x04,
-  DRAGONS: 0x08,
-  PHANTOM: 0x10,
-  SNAKE: 0x20,
-  DEMOGORGON: 0x40,
+  SPIDERS: 1,
+  BEES: 2,
+  FROGS: 4,
+  DRAGONS: 8,
+  PHANTOM: 16,
+  SNAKE: 32,
+  DEMOGORGON: 40,
 }
 
 class ForbiddenForest {
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
-    this.name = 'Forbidden Forest(dev2)'
+    this.name = 'Forbidden Forest(dev5)'
     console.log(`${this.name}::Constructor`, gameId)
     this._popCheevo = popCheevo
     this.postScore = postScore
@@ -51,42 +59,54 @@ class ForbiddenForest {
         case 'firstDance':
           checkFn = () => {
             if (this.getGameMode() >= 1) {
-              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === ENEMIES.BEES && this.getCurrentKills() === 0;
+              return this.currentEnemyType === ENEMIES.BEES &&
+                this.previousEnemyType === ENEMIES.SPIDERS &&
+                this.getLives() > 0;
             }
           }
           break;
         case 'beeUrself':
           checkFn = () => {
             if (this.getGameMode() >= 1) {
-              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === ENEMIES.FROGS && this.getCurrentKills() === 0;
+              return this.currentEnemyType === ENEMIES.FROGS &&
+                this.previousEnemyType === ENEMIES.BEES &&
+                this.getLives() > 0;
             }
           }
           break;
         case 'froggerNotLikeThis':
           checkFn = () => {
             if (this.getGameMode() >= 1) {
-              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === ENEMIES.DRAGONS && this.getCurrentKills() === 0;
+              return this.currentEnemyType === ENEMIES.DRAGONS &&
+                this.previousEnemyType === ENEMIES.FROGS &&
+                this.getLives() > 0;
             }
           }
           break;
-        case 'dragonBreed':
+        case 'dragonbreed':
           checkFn = () => {
             if (this.getGameMode() >= 1) {
-              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === ENEMIES.PHANTOM && this.getCurrentKills() === 0;
+              return this.currentEnemyType === ENEMIES.PHANTOM &&
+                this.previousEnemyType === ENEMIES.DRAGONS &&
+                this.getLives() > 0;
             }
           }
           break;
-        case 'fantomas':
+        case 'fantmas':
           checkFn = () => {
             if (this.getGameMode() >= 1) {
-              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === ENEMIES.SNAKE && this.getCurrentKills() === 0;
+              return this.currentEnemyType === ENEMIES.SNAKE &&
+                this.previousEnemyType === ENEMIES.PHANTOM &&
+                this.getLives() > 0;
             }
           }
           break;
         case 'whyDidItHaveToBeSnakes':
           checkFn = () => {
             if (this.getGameMode() >= 1) {
-              return this.cpuReadNS(CURRENT_ENEMY_TYPE) === ENEMIES.DEMOGORGON && this.getCurrentKills() === 0;
+              return this.currentEnemyType === ENEMIES.DEMOGORGON &&
+                this.previousEnemyType === ENEMIES.SNAKE &&
+                this.getLives() > 0;
             }
           }
           break;
@@ -100,7 +120,12 @@ class ForbiddenForest {
           break;
         case 'ultimateMaster':
           checkFn = () => {
-            return false;
+            return this.startingGameMode === GAME_MODES.INNOCENT &&
+              this.previousGameMode === GAME_MODES.CRAZY &&
+              this.getGameMode() === GAME_MODES.INNOCENT &&
+              this.previousEnemyType === ENEMIES.DEMOGORGON &&
+              this.currentEnemyType === ENEMIES.SPIDERS &&
+              this.getLives() > 0;
           }
           break;
         case 'perfectSpiders':
@@ -176,6 +201,7 @@ class ForbiddenForest {
     this.currentWaveBaseline = null
     this.previousGameMode = null
     this.currentGameMode = null
+
   }
 
   newGameVars() {
@@ -183,6 +209,7 @@ class ForbiddenForest {
     this.score = this.getScore()
     this.lives = this.getLives()
     this.gameMode = this.currentGameMode
+    this.startingGameMode = this.currentGameMode
     this.previousEnemyType = this.currentEnemyType
     this.previousProgress = this.currentProgress
     this.previousWaveBaseline = this.currentWaveBaseline
@@ -191,6 +218,12 @@ class ForbiddenForest {
   }
 
   updateProgressState() {
+    if (this.previousEnemyType !== this.currentEnemyType) {
+      console.log('PrevEnemy %s | New Enemy %s | Kills %s',
+        this.previousEnemyType,
+        this.currentEnemyType,
+        this.getCurrentKills());
+    }
     this.previousEnemyType = this.currentEnemyType
     this.previousProgress = this.currentProgress
     this.previousWaveBaseline = this.currentWaveBaseline
@@ -262,12 +295,13 @@ class ForbiddenForest {
       this.watcher.dispatch('gameOver', {
         score: this.score
       })
+      // no different gameMode leaderboards
+      // All gameMode scores are stored together.
       this.postScore(
         this.gameId,
         this.score,
         this.user.id,
         this.user.username,
-        this.gameMode,
       ).then(res => {
         console.log('Score posted successfully', res)
         this.watcher.dispatch('cheevo', {
