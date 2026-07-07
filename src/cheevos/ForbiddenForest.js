@@ -120,9 +120,9 @@ class ForbiddenForest {
           break;
         case 'ultimateMaster':
           checkFn = () => {
-            return this.startingGameMode === GAME_MODES.INNOCENT &&
-              this.previousGameMode === GAME_MODES.CRAZY &&
-              this.getGameMode() === GAME_MODES.INNOCENT &&
+            return this.startingGameMode === DIFFICULTY_GAME_MODES[GAME_MODES.INNOCENT] &&
+              this.previousGameMode === DIFFICULTY_GAME_MODES[GAME_MODES.CRAZY] &&
+              this.getGameMode() === DIFFICULTY_GAME_MODES[GAME_MODES.INNOCENT] &&
               this.previousEnemyType === ENEMIES.DEMOGORGON &&
               this.currentEnemyType === ENEMIES.SPIDERS &&
               this.getLives() > 0;
