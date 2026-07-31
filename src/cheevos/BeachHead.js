@@ -16,7 +16,7 @@ class BeachHead {
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('Beach Head initialized', cheevosSet, gameId);
     this._popCheevo = popCheevo;
-    this.postScore = postScore
+    this._postScore = postScore
     this.user = user;
     this.gameId = gameId;
     this.watcher = signal();
@@ -86,15 +86,6 @@ class BeachHead {
       this.score = currentScore;
     }
 
-    if (this.gameOverCheck()) {
-      console.log("GameOver", this.score);
-      this.isGameOver = true;
-      this.watcher.dispatch('gameOver', {
-        score: this.score,
-      });
-     this.postScore();
-    }
-
     let currentShips = this.getShips();
     if (currentShips === 10 && currentShips !== this.ships) {
       this.score = 0;
@@ -114,6 +105,15 @@ class BeachHead {
         this.isBeachHead = true;
       }
       console.log('this.tanks=', this.tanks, this.score);
+    }
+
+    if (this.gameOverCheck()) {
+      console.log("GameOver", this.score);
+      this.isGameOver = true;
+      this.watcher.dispatch('gameOver', {
+        score: this.score,
+      });
+      this.postScore();
     }
 
     let currentBunkerHp = this.getBunkerHp();
@@ -136,7 +136,7 @@ class BeachHead {
 
   postScore() {
     console.log('Post Score:', this.score);
-    this.postScore(
+    this._postScore(
       this.gameId,
       this.score,
       this.user.id,

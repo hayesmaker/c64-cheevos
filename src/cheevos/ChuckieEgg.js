@@ -10,7 +10,7 @@ class ChuckieEgg {
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('Chuckie Egg initialized', cheevosSet, gameId);
     this._popCheevo = popCheevo;
-    this.postScore = postScore
+    this._postScore = postScore
     this.user = user;
     this.gameId = gameId;
     this.watcher = signal();
@@ -105,7 +105,7 @@ class ChuckieEgg {
 
   postScore() {
     console.log('Post Score:', this.score);
-    this.postScore(
+    this._postScore(
       this.gameId,
       this.score,
       this.user.id,

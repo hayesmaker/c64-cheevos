@@ -21,7 +21,7 @@ class VegetablesDeluxe {
     console.log('Vegetables Deluxe initialized', cheevosSet, gameId);
     this.gameModes = ["casual", "shopping", "classic", "countdown"];
     this._popCheevo = popCheevo;
-    this.postScore = postScore
+    this._postScore = postScore
     this.user = user;
     this.gameId = gameId;
     this.watcher = signal();
@@ -150,7 +150,7 @@ class VegetablesDeluxe {
 
 
 
-    this.postScore(
+    this._postScore(
       this.gameId,
       this.score,
       this.user.id,
