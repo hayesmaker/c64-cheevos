@@ -12,6 +12,7 @@ const MEM_DIFFICULTY = 0x0069
 const CURRENT_ENEMY_TYPE = 0x004e
 const WAVE_BASELINE = 0x005e
 const CURRENT_KILLS = 0x0041
+const CURRENT_ARROWS = 0x0027
 
 // Helper Consts
 const DIFFICULTY_GAME_MODES = {
@@ -41,7 +42,7 @@ const ENEMIES = {
 
 class ForbiddenForest {
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
-    this.name = 'Forbidden Forest(dev5)'
+    this.name = 'Forbidden Forest(dev8)'
     console.log(`${this.name}::Constructor`, gameId)
     this._popCheevo = popCheevo
     this.postScore = postScore
@@ -130,11 +131,20 @@ class ForbiddenForest {
           break;
         case 'perfectSpiders':
           checkFn = () => {
-            return false;
+            return this.getGameMode() === DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
+              this.currentEnemyType === ENEMIES.BEES &&
+              this.previousEnemyType === ENEMIES.SPIDERS &&
+              this.getLives() > 0 &&
+              this.getArrows() === 42;
           }
           break;
         case 'perfectBees':
           checkFn = () => {
+            return this.getGameMode() === DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
+              this.currentEnemyType === ENEMIES.SPIDERS &&
+              this.previousEnemyType === ENEMIES.FROGS &&
+              this.getLives() > 0 &&
+              this.getArrows() === 48;
             return false;
           }
         case 'perfectFrogs':
@@ -201,6 +211,8 @@ class ForbiddenForest {
     this.currentWaveBaseline = null
     this.previousGameMode = null
     this.currentGameMode = null
+    this.arrowsRemaining = null
+    this.arrowsAtRoundStart = null
 
   }
 
@@ -214,16 +226,24 @@ class ForbiddenForest {
     this.previousProgress = this.currentProgress
     this.previousWaveBaseline = this.currentWaveBaseline
     this.previousGameMode = this.currentGameMode
+    this.arrowsRemaining = this.getArrows()
+    this.arrowsAtRoundStart = this.arrowsRemaining
     console.log('Started New Game', this.score, this.lives, this.gameMode)
   }
 
   updateProgressState() {
     if (this.previousEnemyType !== this.currentEnemyType) {
-      console.log('PrevEnemy %s | New Enemy %s | Kills %s',
+      console.log('New Round: PrevEnemy %s | New Enemy %s | Kills %s | Arrows %s',
         this.previousEnemyType,
         this.currentEnemyType,
-        this.getCurrentKills());
+        this.getCurrentKills(),
+        this.getArrows(),
+      );
+
+      // this.arrowsAtRoundStart = this.getArrows();
+      // this.arrowsRemaining = this.arrowsAtRoundStart;
     }
+
     this.previousEnemyType = this.currentEnemyType
     this.previousProgress = this.currentProgress
     this.previousWaveBaseline = this.currentWaveBaseline
@@ -233,6 +253,10 @@ class ForbiddenForest {
     this.currentProgress = this.cpuReadNS(CURRENT_KILLS)
     this.currentWaveBaseline = this.cpuReadNS(WAVE_BASELINE)
     this.currentGameMode = this.getGameMode()
+  }
+
+  getArrows() {
+    return this.cpuReadNS(CURRENT_ARROWS)
   }
 
   getCurrentKills() {
