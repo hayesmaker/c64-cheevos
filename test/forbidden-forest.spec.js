@@ -155,7 +155,7 @@ describe('Forbidden Forest Cheevos', () => {
   })
 
   test.each([
-    ['First Dance', ENEMY.spiders, ENEMY.bees],
+    ['Arachnophobia', ENEMY.spiders, ENEMY.bees],
     ['Bee Urself', ENEMY.bees, ENEMY.frogs],
     ['Frogger Not Like This', ENEMY.frogs, ENEMY.dragons],
     ['Dragonbreed', ENEMY.dragons, ENEMY.phantom],
@@ -167,7 +167,7 @@ describe('Forbidden Forest Cheevos', () => {
 
   test('does not pop wave achievements on Innocent mode', () => {
     const memory = createActiveGameMemory({ enemy: ENEMY.spiders, difficulty: DIFFICULTY.innocent })
-    const { cheevos, popCheevo } = createAchievementTest('First Dance', memory)
+    const { cheevos, popCheevo } = createAchievementTest('Arachnophobia', memory)
 
     cheevos.execute()
     memory[ADDR.currentEnemyType] = ENEMY.bees
@@ -178,7 +178,7 @@ describe('Forbidden Forest Cheevos', () => {
 
   test('does not pop wave achievements when out of lives', () => {
     const memory = createActiveGameMemory({ enemy: ENEMY.spiders })
-    const { cheevos, popCheevo } = createAchievementTest('First Dance', memory)
+    const { cheevos, popCheevo } = createAchievementTest('Arachnophobia', memory)
 
     cheevos.execute()
     memory[ADDR.currentEnemyType] = ENEMY.bees
@@ -190,7 +190,7 @@ describe('Forbidden Forest Cheevos', () => {
 
   test('does not pop wave achievements from a static next-wave memory state', () => {
     const memory = createActiveGameMemory({ enemy: ENEMY.bees })
-    const { cheevos, popCheevo } = createAchievementTest('First Dance', memory)
+    const { cheevos, popCheevo } = createAchievementTest('Arachnophobia', memory)
 
     cheevos.execute()
     cheevos.execute()
