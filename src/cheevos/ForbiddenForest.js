@@ -143,7 +143,6 @@ class ForbiddenForest {
           break;
         case 'perfectSpiders':
           // All enemies killed without missing a shot. No lives must be lost. On Trooper or higher.
-          // @todo handle higher game mode difficulties.
           checkFn = () => {
             return this.currentGameMode >= DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
               this.currentEnemyType === ENEMIES.BEES &&
@@ -358,7 +357,6 @@ class ForbiddenForest {
     const currentScore = this.getScore()
     if (currentScore !== this.score && !this.isGameOver) {
       this.score = currentScore
-      // console.log(`${this.name}.score=`, this.score)
     }
 
     if (this.newGameCheck()) {
