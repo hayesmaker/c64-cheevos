@@ -39,7 +39,7 @@ const ENEMIES = {
   DRAGONS: 8,
   PHANTOM: 16,
   SNAKE: 32,
-  DEMOGORGON: 40,
+  DEMOGORGON: 64,
 }
 
 const ENEMY_COUNT = {
