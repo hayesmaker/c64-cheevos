@@ -54,7 +54,7 @@ const ENEMY_COUNT = {
 
 class ForbiddenForest {
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
-    this.name = 'Forbidden Forest(dev8)'
+    this.name = 'Forbidden Forest(local4)'
     console.log(`${this.name}::Constructor`, gameId)
     this._popCheevo = popCheevo
     this.postScore = postScore
@@ -154,31 +154,51 @@ class ForbiddenForest {
           break;
         case 'perfectBees':
           checkFn = () => {
+            if (this.currentEnemyType === ENEMIES.FROGS &&
+              this.previousEnemyType === ENEMIES.BEES) {
+              console.log('[Bees Beaten] arrowsNow=%s, arrowsAtStart=%s', this.getArrows(), this.arrowsAtRoundStart, ENEMY_COUNT.BEES[this.currentGameMode])
+            }
             return this.currentGameMode >= DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
               this.currentEnemyType === ENEMIES.FROGS &&
               this.previousEnemyType === ENEMIES.BEES &&
               this.getLives() >= 3 &&
               // this.getArrows() === 48;
-              this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.BEES[this.currentGameMode];
+              this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.BEES[this.currentGameMode] + 1;
           }
+          break;
         case 'perfectFrogs':
           checkFn = () => {
+            if (this.currentEnemyType === ENEMIES.DRAGONS &&
+              this.previousEnemyType === ENEMIES.FROGS) {
+              console.log('[Frogs Beaten] arrowsNow=%s, arrowsAtStart=%s',
+                this.getArrows(),
+                this.arrowsAtRoundStart,
+                ENEMY_COUNT.FROGS[this.currentGameMode])
+            }
             return this.currentGameMode >= DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
               this.currentEnemyType === ENEMIES.DRAGONS &&
               this.previousEnemyType === ENEMIES.FROGS &&
               this.getLives() >= 3 &&
               // -1 as 1 arrow less is given at the start of Frogs and Dragons round.
-              this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.FROGS[this.currentGameMode] - 1;
+              this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.FROGS[this.currentGameMode] + 1;
           }
           break;
         case 'perfectDragons':
           checkFn = () => {
+            if (this.currentEnemyType === ENEMIES.PHANTOM &&
+              this.previousEnemyType === ENEMIES.DRAGONS) {
+              console.log('[Dragons Beaten] arrowsNow=%s, arrowsAtStart=%s',
+                this.getArrows(),
+                this.arrowsAtRoundStart,
+                ENEMY_COUNT.DRAGONS[this.currentGameMode])
+            }
+
             return this.currentGameMode >= DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
               this.currentEnemyType === ENEMIES.PHANTOM &&
               this.previousEnemyType === ENEMIES.DRAGONS &&
               this.getLives() >= 3 &&
               // -1 as arrow 1 arrow less is given at the start Frogs and Dragons round.
-              this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.DRAGONS[this.currentGameMode] - 1;
+              this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.DRAGONS[this.currentGameMode];
           }
           break;
         case 'oneShotPhantom':
@@ -222,9 +242,8 @@ class ForbiddenForest {
           checkFn = () => {
             return this.currentGameMode === DIFFICULTY_GAME_MODES[GAME_MODES.INNOCENT] &&
               this.currentEnemyType === ENEMIES.DEMOGORGON &&
-              this.previousEnemyType === ENEMIES.PHANTOM &&
-              this.cpuReadNS(NIGHT_STATE) < 0xf0 &&
-              this.cpuReadNS(NIGHT_STATE) > 0x28;
+              this.previousEnemyType === ENEMIES.SNAKE &&
+              this.cpuReadNS(NIGHT_STATE) < 0xf0
           }
           break;
         default:
@@ -278,16 +297,23 @@ class ForbiddenForest {
     this.arrowsRemaining = this.getArrows()
     this.arrowsAtRoundStart = this.arrowsRemaining
     this.isRoundInterstitial = false;
-    console.log('[Started] New Game - score=%s, lives=%s, gameMode=%s, arrows=%s', this.score, this.lives, this.gameMode, this.arrowsAtRoundStart)
+    console.log('' +
+      '[Started] New Game - ' +
+      'score=%s, lives=%s, ' +
+      'gameMode=%s, ' +
+      'arrows=%s, ' +
+      'nightState=%s',
+      this.score, this.lives, this.gameMode, this.arrowsAtRoundStart, this.cpuReadNS(NIGHT_STATE))
   }
 
   updateProgressState() {
     if (this.previousEnemyType !== this.currentEnemyType) {
-      console.log('[New Round]: PrevEnemy %s | New Enemy %s | Kills %s | Arrows %s',
+      console.log('[New Round]: PrevEnemy %s | New Enemy %s | Kills %s | Arrows %s | NightState=%s]',
         this.previousEnemyType,
         this.currentEnemyType,
         this.getCurrentKills(),
-        this.getArrows()
+        this.getArrows(),
+        this.cpuReadNS(NIGHT_STATE)
       )
       this.isRoundInterstitial = true;
 
@@ -297,7 +323,7 @@ class ForbiddenForest {
     if (this.isRoundInterstitial && this.cpuReadNS(INTERSTITIAL_STATE) === 0x2c) {
       this.isRoundInterstitial = false;
       this.arrowsAtRoundStart = this.cpuReadNS(CURRENT_ARROWS);
-      console.log('Start Enemy Attack wave[Arrows=%s]', this.arrowsAtRoundStart, this.getArrows());
+      console.log('Start Enemy Attack wave [Arrows=%s] [nightState%s]', this.arrowsAtRoundStart, this.cpuReadNS(NIGHT_STATE) );
     }
 
     this.previousEnemyType = this.currentEnemyType
