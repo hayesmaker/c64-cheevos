@@ -54,7 +54,7 @@ const ENEMY_COUNT = {
 
 class ForbiddenForest {
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
-    this.name = 'Forbidden Forest(local4)'
+    this.name = 'Forbidden Forest(test0)'
     console.log(`${this.name}::Constructor`, gameId)
     this._popCheevo = popCheevo
     this.postScore = postScore
@@ -179,8 +179,9 @@ class ForbiddenForest {
               this.currentEnemyType === ENEMIES.DRAGONS &&
               this.previousEnemyType === ENEMIES.FROGS &&
               this.getLives() >= 3 &&
-              // -1 as 1 arrow less is given at the start of Frogs and Dragons round.
-              this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.FROGS[this.currentGameMode] + 1;
+              // +1 as 1 arrow more is given at the start of Frogs and Dragons round sometimes.
+              (this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.FROGS[this.currentGameMode] + 1 ||
+              this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.FROGS[this.currentGameMode]);
           }
           break;
         case 'perfectDragons':
@@ -232,6 +233,18 @@ class ForbiddenForest {
         case 'undeadSlayer':
           checkFn = () => {
             const skelliesToKill = 5;
+
+            // if (this.currentGameMode === DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] && this.currentEnemyType === ENEMIES.PHANTOM) {
+            //   console.log(
+            //     'Undead Slayer Tracking',
+            //     skelliesToKill,
+            //     this.getArrows(),
+            //     this.arrowsAtRoundStart,
+            //     this.scoreAtStart,
+            //     this.getScore()
+            //   );
+            // }
+
             return this.currentGameMode >= DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
               this.currentEnemyType === ENEMIES.PHANTOM &&
               this.getArrows() === this.arrowsAtRoundStart - skelliesToKill &&
@@ -323,6 +336,7 @@ class ForbiddenForest {
     if (this.isRoundInterstitial && this.cpuReadNS(INTERSTITIAL_STATE) === 0x2c) {
       this.isRoundInterstitial = false;
       this.arrowsAtRoundStart = this.cpuReadNS(CURRENT_ARROWS);
+      this.scoreAtStart = this.getScore();
       console.log('Start Enemy Attack wave [Arrows=%s] [nightState%s]', this.arrowsAtRoundStart, this.cpuReadNS(NIGHT_STATE) );
     }
 
