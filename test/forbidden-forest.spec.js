@@ -25,7 +25,7 @@ const ENEMY = {
   dragons: 8,
   phantom: 16,
   snake: 32,
-  demogorgon: 40
+  demogorgon: 64
 }
 
 const createCheevo = (title) => ({

@@ -11,6 +11,7 @@ export const cheevosRegistry = {
   'munchy-worm': () => import('./cheevos/MunchyWorm.js'),
   'park-patrol': () => import('./cheevos/ParkPatrol.js'),
   'potty-pigeon': () => import('./cheevos/PottyPigeon.js'),
+  'rainbow-islands': () => import('./cheevos/RainbowIslands.js'),
   'stix': () => import('./cheevos/Stix.js'),
   'tilt': () => import('./cheevos/Tilt.js'),
   'up-n-down': () => import('./cheevos/UpNDown.js'),
