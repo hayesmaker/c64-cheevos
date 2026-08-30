@@ -119,6 +119,11 @@ class MariosCementFactory {
             return this.location.row === 3 && this.location.col === 4
           }
           break
+        case 'ultimateMaster':
+          checkFn = () => {
+            return this.score >= 1000 && this.livesLost === 0
+          }
+          break
       }
       return {
         title: c.title,
