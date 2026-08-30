@@ -4,6 +4,20 @@ import { camelize } from '../helpers/string-utils.js'
 const GAME_MODE = 0x20c9
 
 class MariosCementFactory {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: 0x20c9, length: 1, label: 'Game mode' },
+      { address: 0x8121, length: 2, label: 'Score' },
+      { address: 0x824c, length: 1, label: 'Lives lost' },
+      { address: 0x8da0, length: 2, label: 'Player position' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     this.gameModes = ['gameA', 'gameB']
     this._popCheevo = popCheevo
@@ -121,6 +135,7 @@ class MariosCementFactory {
       col: 0
     }
     this.hasReachedEscapeFloor = false
+    this.scoreSubmitted = false
   }
 
   getGameMode = () => {
@@ -164,18 +179,25 @@ class MariosCementFactory {
     if (currentLivesLost === 0 && currentLivesLost !== this.livesLost) {
       console.log('New Game')
       this.livesLost = currentLivesLost
+      this.scoreSubmitted = false
+      this.watcher.dispatch('newGame', {
+        gameMode: this.getGameMode()
+      })
     }
 
-    if (currentLivesLost === 3 && this.livesLost === 2) {
+    if (currentLivesLost === 3 && this.livesLost === 2 && !this.scoreSubmitted) {
+      this.scoreSubmitted = true
+      const gameMode = this.getGameMode()
       this.watcher.dispatch('gameOver', {
-        score: this.score
+        score: this.score,
+        gameMode
       })
       this.postScore(
         this.gameId,
         this.score,
         this.user.id,
         this.user.username,
-        this.getGameMode()
+        gameMode
       ).then(res => {
         console.log('Score posted successfully', res)
 

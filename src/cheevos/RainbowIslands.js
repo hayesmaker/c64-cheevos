@@ -1,5 +1,5 @@
 import signal from 'signal-js'
-import { convertMemToScoreDigits } from '../helpers/string-utils.js'
+import { camelize, convertMemToScoreDigits } from '../helpers/string-utils.js'
 
 const MEM_SCORE_1 = 0x115b
 const MEM_SCORE_2 = 0x115c
@@ -23,6 +23,17 @@ class RainbowIslands {
       const hasPopped = poppedCheevos.some((p) => {
         return p.achievement._id === c._id
       })
+      let checkFn
+      switch (camelize(c.title)) {
+        case 'testCheevo':
+          checkFn = () => {
+            return this.score >= 100
+          }
+          break;
+        default:
+
+          break;
+      }
 
       return {
         title: c.title,

@@ -204,6 +204,13 @@ class ForbiddenForest {
           break;
         case 'oneShotPhantom':
           checkFn = () => {
+            if (this.currentEnemyType === ENEMIES.SNAKE &&
+              this.previousEnemyType === ENEMIES.PHANTOM) {
+              console.log('[Phantom Beaten] arrowsNow=%s, arrowsAtStart=%s',
+                this.getArrows(),
+                this.arrowsAtRoundStart,
+                ENEMY_COUNT.PHANTOM[this.currentGameMode])
+            }
             return this.currentGameMode >= DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
               this.currentEnemyType === ENEMIES.SNAKE &&
               this.previousEnemyType === ENEMIES.PHANTOM &&
@@ -213,6 +220,13 @@ class ForbiddenForest {
         break;
         case 'oneShotSnake':
           checkFn = () => {
+            if (this.currentEnemyType === ENEMIES.DEMOGORGON &&
+              this.previousEnemyType === ENEMIES.SNAKE) {
+              console.log('[Snake Beaten] arrowsNow=%s, arrowsAtStart=%s',
+                this.getArrows(),
+                this.arrowsAtRoundStart,
+                ENEMY_COUNT.SNAKE[this.currentGameMode])
+            }
             return this.currentGameMode >= DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
               this.currentEnemyType === ENEMIES.DEMOGORGON &&
               this.previousEnemyType === ENEMIES.SNAKE &&
@@ -223,6 +237,14 @@ class ForbiddenForest {
         // We may remove oneShotDemogorgon as it's extremely difficult.
         case 'oneShotDemogorgon':
           checkFn = () => {
+            if (this.currentEnemyType === ENEMIES.SPIDERS &&
+              this.previousEnemyType === ENEMIES.DEMOGORGON) {
+              console.log('[Demogorgon Beaten] arrowsNow=%s, arrowsAtStart=%s',
+                this.getArrows(),
+                this.arrowsAtRoundStart,
+                ENEMY_COUNT.DEMOGORGON[this.currentGameMode])
+            }
+
             return this.currentGameMode >= DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
             this.previousEnemyType === ENEMIES.DEMOGORGON &&
             this.currentEnemyType === ENEMIES.SPIDERS &&
@@ -233,21 +255,10 @@ class ForbiddenForest {
         case 'undeadSlayer':
           checkFn = () => {
             const skelliesToKill = 5;
-
-            // if (this.currentGameMode === DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] && this.currentEnemyType === ENEMIES.PHANTOM) {
-            //   console.log(
-            //     'Undead Slayer Tracking',
-            //     skelliesToKill,
-            //     this.getArrows(),
-            //     this.arrowsAtRoundStart,
-            //     this.scoreAtStart,
-            //     this.getScore()
-            //   );
-            // }
-
             return this.currentGameMode >= DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
               this.currentEnemyType === ENEMIES.PHANTOM &&
               this.getArrows() === this.arrowsAtRoundStart - skelliesToKill &&
+              this.getLives() >= 3 &&
               this.getScore() === this.scoreAtStart + skelliesToKill * 1000;
           }
           break;
