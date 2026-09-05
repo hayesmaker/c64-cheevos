@@ -3,6 +3,18 @@ import {camelize} from "../helpers/string-utils.js";
 
 
 class Hercules {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: 0x001e, length: 1, label: 'Lives' },
+      { address: 0x0045, length: 6, label: 'Score' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     this._popCheevo = popCheevo;
     this.postScore = postScore
@@ -62,6 +74,7 @@ class Hercules {
     if (currentLives === 3 && currentLives !== this.lives) {
       console.log("New Game");
       this.isGameOver = false;
+      this.watcher.dispatch('newGame', {})
     }
 
     if (currentLives === 0 && this.lives === 1 && !this.isGameOver) {

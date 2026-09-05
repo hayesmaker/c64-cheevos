@@ -11,6 +11,21 @@ const MEM_FIGHTER_DESTROYED = 0x0097
 
 
 class Uridium {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: 0x0025, length: 2, label: 'Lives and level' },
+      { address: 0x0087, length: 1, label: 'Formations' },
+      { address: 0x0096, length: 2, label: 'Level state' },
+      { address: 0x00a9, length: 1, label: 'Destruct sequence' },
+      { address: 0x4853, length: 6, label: 'Score' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('Uridium initialized', cheevosSet, gameId)
     this._popCheevo = popCheevo
@@ -157,6 +172,7 @@ class Uridium {
     this.score = 0
     this.highScore = 0
     this.postScore = postScore
+    this.scoreSubmitted = false
   }
 
   getScore = () => {
@@ -198,15 +214,24 @@ class Uridium {
 
     const lives = this.getLives()
     if (lives !== this.lives) {
+      if (lives > 0 && this.lives === 0) {
+        this.scoreSubmitted = false
+        this.watcher.dispatch('newGame', {
+          gameMode: 0
+        })
+      }
+
       if (lives < this.lives) {
         console.log('Uridium::life lost', lives)
       }
 
-      if (lives === 0 && this.lives === 1) {
+      if (lives === 0 && this.lives === 1 && !this.scoreSubmitted) {
+        this.scoreSubmitted = true
         this.fightersDestroyed = 0;
         // const user = toRaw(this.user.value);
         this.watcher.dispatch('gameOver', {
           score: this.score,
+          gameMode: 0,
           highScore: this.score > this.highScore ? this.score : 0
         })
         console.log('User submit', this.user, score, this.score)

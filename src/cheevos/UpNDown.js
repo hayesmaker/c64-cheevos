@@ -16,6 +16,18 @@ const MEM_ATTRACT_MODE = 0x023c // 0 not in attract mode, $80 in attract mode
 const GAME_TITLE = `Up 'n' Down`
 
 class UpNDown {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: MEM_SCORE_1, length: 15, label: 'Score and lives' },
+      { address: MEM_ATTRACT_MODE, length: 1, label: 'Attract mode' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('%s :: constructor', GAME_TITLE, gameId, cheevosSet);
     this._popCheevo = popCheevo;
@@ -69,6 +81,7 @@ class UpNDown {
   execute () {
     if (this.isGameOver && !this.getIsAttractMode() && this.getLives() === 4) {
       this.newGameVars();
+      this.watcher.dispatch('newGame', {})
       // this.isGameOver = false;
     }
 

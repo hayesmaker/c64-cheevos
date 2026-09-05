@@ -1,6 +1,17 @@
 import signal from 'signal-js';
 
 class LegendOfWilf {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: 0x824c, length: 1, label: 'Lives lost' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor() {
     console.log('LegendOfWilf initialized');
     this.livesLost = 0;
@@ -19,6 +30,10 @@ class LegendOfWilf {
   execute = () => {
 
     const currentLivesLost = this.getLives();
+    if (this.livesLost === 0 && currentLivesLost === 0 && !this.hasStartedGame) {
+      this.hasStartedGame = true;
+      this.watcher.dispatch('newGame', {})
+    }
     if (currentLivesLost > this.livesLost) {
       this.livesLost = currentLivesLost;
       this.hasLostLife = true;

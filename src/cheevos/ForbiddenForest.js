@@ -53,6 +53,20 @@ const ENEMY_COUNT = {
 }
 
 class ForbiddenForest {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: 0x0022, length: 12, label: 'Score and arrows' },
+      { address: 0x0041, length: 31, label: 'Wave state' },
+      { address: 0x0069, length: 1, label: 'Difficulty' },
+      { address: 0xd00e, length: 1, label: 'Night state' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     this.name = 'Forbidden Forest(test0)'
     console.log(`${this.name}::Constructor`, gameId)
@@ -304,6 +318,7 @@ class ForbiddenForest {
     this.arrowsAtRoundStart = null
     this.scoreAtStart = null
     this.isRoundInterstitial = false;
+    this.scoreSubmitted = false
 
   }
 
@@ -321,6 +336,10 @@ class ForbiddenForest {
     this.arrowsRemaining = this.getArrows()
     this.arrowsAtRoundStart = this.arrowsRemaining
     this.isRoundInterstitial = false;
+    this.scoreSubmitted = false
+    this.watcher.dispatch('newGame', {
+      gameMode: this.gameMode
+    })
     console.log('' +
       '[Started] New Game - ' +
       'score=%s, lives=%s, ' +
@@ -422,8 +441,11 @@ class ForbiddenForest {
     if (this.endGameCheck()) {
       console.log('Game Over! Final Score:', this.score);
       this.isGameOver = true
+      if (this.scoreSubmitted) return
+      this.scoreSubmitted = true
       this.watcher.dispatch('gameOver', {
-        score: this.score
+        score: this.score,
+        gameMode: this.gameMode
       })
       // no different gameMode leaderboards
       // All gameMode scores are stored together.

@@ -7,6 +7,17 @@ import {camelize} from "../helpers/string-utils.js";
  * 006E = Level Counter (00=Level 1, 01=Level 2, 02=Level 3, etc.)
  */
 class ChuckieEgg {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: 0x0064, length: 11, label: 'Score, lives, and level' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('Chuckie Egg initialized', cheevosSet, gameId);
     this._popCheevo = popCheevo;
@@ -72,6 +83,7 @@ class ChuckieEgg {
       console.log("New Game");
       this.isGameOver = false;
       this.newGameVars();
+      this.watcher.dispatch('newGame', {})
     }
 
     let currentScore = this.getScore();

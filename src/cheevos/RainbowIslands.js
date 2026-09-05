@@ -6,10 +6,23 @@ const MEM_SCORE_2 = 0x115c
 const MEM_SCORE_3 = 0x115d
 const MEM_SCORE_4 = 0x115e
 const MEM_LIVES = 0x1160
+const ROUND_NUMBER = 0x1166
 const GAME_OVER_LIVES = 0xff
-const START_GAME_LIVES = 0x02
 
 class RainbowIslands {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: MEM_SCORE_1, length: 4, label: 'Score' },
+      { address: MEM_LIVES, length: 1, label: 'Lives' },
+      { address: ROUND_NUMBER, length: 1, label: 'Round' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     this.name = 'Rainbow Islands'
     console.log(`${this.name}::Constructor`, gameId)
@@ -25,9 +38,24 @@ class RainbowIslands {
       })
       let checkFn
       switch (camelize(c.title)) {
-        case 'testCheevo':
+        case 'score1000':
           checkFn = () => {
-            return this.score >= 100
+            return this.score >= 1000
+          }
+          break;
+        case 'score2000':
+          checkFn = () => {
+            return this.score >= 2000
+          }
+          break;
+        case 'score3000':
+          checkFn = () => {
+            return this.score >= 3000
+          }
+          break;
+        case 'reachRound2':
+          checkFn = () => {
+            return this.roundNumber === 1;
           }
           break;
         default:
@@ -39,7 +67,7 @@ class RainbowIslands {
         title: c.title,
         message: c.description,
         isPopped: hasPopped,
-        check: () => false,
+        check: checkFn || (() => false),
         cheevoId: c._id
       }
     })
@@ -51,6 +79,8 @@ class RainbowIslands {
     this.lives = GAME_OVER_LIVES
     this.isGameOver = true
     this.isGameInProgress = false
+    this.scoreSubmitted = false
+    this.roundNumber = 0;
   }
 
   newGameVars() {
@@ -58,6 +88,8 @@ class RainbowIslands {
     this.isGameInProgress = true
     this.score = this.getScore()
     this.lives = this.getLives()
+    this.scoreSubmitted = false
+    this.roundNumber = 0;
     console.log('Started New Game', this.score, this.lives)
   }
 
@@ -69,12 +101,17 @@ class RainbowIslands {
     return parseInt(score1 + score2 + score3 + score4, 10)
   }
 
+  getRound() {
+    return this.cpuReadNS(ROUND_NUMBER);
+  }
+
   getLives() {
     return this.cpuReadNS(MEM_LIVES)
   }
 
   newGameCheck() {
-    return this.isGameOver && this.getLives() === START_GAME_LIVES;
+    const lives = this.getLives()
+    return this.isGameOver && lives > 0 && lives !== GAME_OVER_LIVES;
   }
 
   endGameCheck() {
@@ -84,6 +121,7 @@ class RainbowIslands {
   execute() {
     if (this.newGameCheck()) {
       this.newGameVars()
+      this.watcher.dispatch('newGame', {})
     }
 
     const currentScore = this.getScore()
@@ -98,9 +136,16 @@ class RainbowIslands {
       console.log(`${this.name}.lives=`, this.lives)
     }
 
+    const currentRound = this.getRound()
+    if (currentRound !== this.roundNumber) {
+      this.roundNumber = currentRound;
+    }
+
     if (this.endGameCheck()) {
       this.isGameOver = true
       this.isGameInProgress = false
+      if (this.scoreSubmitted) return
+      this.scoreSubmitted = true
       this.watcher.dispatch('gameOver', {
         score: this.score
       })

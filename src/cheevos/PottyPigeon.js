@@ -26,6 +26,18 @@ const GAME_OVER_8 = 0x048f // 12 Screen RAM address off GAME OVER text, 0x048f i
 // const MEM_HAS_POWER = 0xcfb5;   // 0 when out of power, 1 when has some power
 
 class PottyPigeon {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: MEM_SCORE_1, length: 15, label: 'Score and lives' },
+      { address: GAME_OVER_1, length: 9, label: 'Game over text' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('PottyPigeon::constructor', gameId, cheevosSet)
     this._popCheevo = popCheevo
@@ -99,6 +111,7 @@ class PottyPigeon {
       console.log('PottyPigeon::NewGame!', this.lives, this.score)
       this.isGameOver = false
       this.gameOverString = ''
+      this.watcher.dispatch('newGame', {})
     }
 
     const currentScore = this.getScore()

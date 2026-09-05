@@ -79,6 +79,16 @@ const expectAchievementPopsOnTransition = ({ title, fromEnemy, toEnemy, difficul
 }
 
 describe('Forbidden Forest Cheevos', () => {
+  test('defines compact Ultimate memory polling ranges', () => {
+    expect(ForbiddenForest.ultimate.pollIntervalMs).toBe(1000)
+    expect(ForbiddenForest.ultimateMemoryRanges).toEqual([
+      { address: 0x0022, length: 12, label: 'Score and arrows' },
+      { address: 0x0041, length: 31, label: 'Wave state' },
+      { address: 0x0069, length: 1, label: 'Difficulty' },
+      { address: 0xd00e, length: 1, label: 'Night state' }
+    ])
+  })
+
   test('decodes packed BCD score from zero page memory', () => {
     const cheevos = createForbiddenForest({
       0x002a: 0x00,
@@ -102,6 +112,20 @@ describe('Forbidden Forest Cheevos', () => {
     expect(cheevos.isGameOver).toBe(false)
     expect(cheevos.lives).toBe(3)
     expect(cheevos.gameMode).toBe(0)
+  })
+
+  test('dispatches newGame when a game starts', () => {
+    const cheevos = createForbiddenForest({
+      0x0055: 1,
+      0x005f: 3,
+      0x0069: 0x08
+    })
+    const onNewGame = vi.fn()
+    cheevos.watcher.on('newGame', onNewGame)
+
+    cheevos.execute()
+
+    expect(onNewGame).toHaveBeenCalledWith({ gameMode: 1 })
   })
 
   test('does not start during the title cutscene before player control', () => {
@@ -152,6 +176,27 @@ describe('Forbidden Forest Cheevos', () => {
       'user1',
       'player1'
     )
+  })
+
+  test('does not submit duplicate scores while game-over state is polled repeatedly', () => {
+    const postScore = vi.fn().mockResolvedValue({})
+    const memory = {
+      0x002a: 0x00,
+      0x002b: 0x30,
+      0x002c: 0x00,
+      0x002d: 0x00,
+      0x0055: 1,
+      0x005f: 3,
+      0x0069: 0x0c
+    }
+    const cheevos = createForbiddenForest(memory, { postScore })
+
+    cheevos.execute()
+    memory[0x005f] = 0
+    cheevos.execute()
+    cheevos.execute()
+
+    expect(postScore).toHaveBeenCalledTimes(1)
   })
 
   test.each([

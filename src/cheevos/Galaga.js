@@ -18,6 +18,19 @@ const BULLETS_FIRED = 0x8fc6
 const BULLETS_FIRED_HI = 0x8fc7
 
 class Galaga {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: GAME_OVER_FLAG, length: 1, label: 'Game state' },
+      { address: MEM_SCORE_4, length: 4, label: 'Score' },
+      { address: MEM_LIVES, length: 1, label: 'Lives' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     this.name = 'Galaga'
     console.log(`${this.name}::Constructor`, gameId)
@@ -95,6 +108,7 @@ class Galaga {
 
     if (this.newGameCheck()) {
       this.newGameVars()
+      this.watcher.dispatch('newGame', {})
     }
 
     const currentLives = this.getLives()

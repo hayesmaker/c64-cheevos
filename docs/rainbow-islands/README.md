@@ -22,6 +22,8 @@ Known C64 memory addresses for Rainbow Islands.
 | `$009e-$009f` | Water Level            | `$009e` (Low) `$009f` (High) Normally Starts at `$00 $12` (or $fc $12 after a life lost). When Water rises Low decrements quickly and High byte decrements on each low byte rollover. Water rises as values decrement.  For achievement tracking high byte only tracking should be fine. | 
 | `$0076` | Game Timer             | Starts at `$37`, decrements by `1` each second. When Below `0` it hits `$ff` and stays there and *"Hurry Up"* is announced                                                                                                                                                               |
 | `$0077` | Secondary Game Timer   | Starts at `8` decrements by `1` each second after *"Hurry Up"* is announced. When Below `0` it hits `$ff` and stays there and Water level starts to rise                                                                                                                                 |
+| `$1165` | Island Index | `0` Index Island number |
+| `$1166` | Round Index | `0` Indexed Round Number |
 
 
 ## Special Item Tracking
