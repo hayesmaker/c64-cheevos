@@ -83,18 +83,13 @@ class Galaga {
   }
 
   endGameCheck() {
-    if (!this.isGameOver) {
-      console.log('endGameCheck', this.isGameOver, this.cpuReadNS(GAME_OVER_FLAG))
+    if (!this.isGameOver && this.cpuReadNS(GAME_OVER_FLAG) === 19) {
+      console.log('Game Over flag=19', this.score, this.lives)
+      return true;
     }
-    //console.log('endGameCheck', this.isGameOver, this.cpuReadNS(GAME_OVER_FLAG))
-    return !this.isGameOver &&
-       this.cpuReadNS(GAME_OVER_FLAG) === 19;
   }
 
   newGameCheck() {
-    if (this.isGameOver) {
-      console.log('newGameCheck', this.isGameOver, this.cpuReadNS(GAME_OVER_FLAG))
-    }
     return this.isGameOver &&
       this.cpuReadNS(GAME_OVER_FLAG) === 16;
   }
@@ -103,7 +98,7 @@ class Galaga {
     const currentScore = this.getScore()
     if (currentScore !== this.score) {
       this.score = currentScore
-      console.log(`${this.name}.score=`, this.score)
+      // console.log(`${this.name}.score=`, this.score)
     }
 
     if (this.newGameCheck()) {
@@ -114,7 +109,7 @@ class Galaga {
     const currentLives = this.getLives()
     if (currentLives !== this.lives) {
       this.lives = currentLives
-      console.log('lives=', this.lives)
+      // console.log('lives=', this.lives)
     }
     if (this.endGameCheck()) {
       this.isGameOver = true
@@ -127,8 +122,7 @@ class Galaga {
         this.user.id,
         this.user.username
       ).then(res => {
-        console.log('Score posted successfully', res)
-
+        console.log('Score of %s posted successfully', this.score, res.data)
         this.watcher.dispatch('cheevo', {
           title: `Score Submit Success`,
           message: `Your score of ${this.score} has been submitted to the ${this.name} Leaderboard!`
