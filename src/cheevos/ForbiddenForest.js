@@ -40,6 +40,7 @@ const ENEMIES = {
   PHANTOM: 16,
   SNAKE: 32,
   DEMOGORGON: 64,
+  GAME_END: 124,
 }
 
 const ENEMY_COUNT = {
@@ -213,7 +214,10 @@ class ForbiddenForest {
               this.previousEnemyType === ENEMIES.DRAGONS &&
               this.getLives() >= 3 &&
               // -1 as arrow 1 arrow less is given at the start Frogs and Dragons round.
-              this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.DRAGONS[this.currentGameMode];
+              (
+                this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.DRAGONS[this.currentGameMode] - 1 ||
+                this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.DRAGONS[this.currentGameMode]
+              );
           }
           break;
         case 'oneShotPhantom':
@@ -251,7 +255,7 @@ class ForbiddenForest {
         // We may remove oneShotDemogorgon as it's extremely difficult.
         case 'oneShotDemogorgon':
           checkFn = () => {
-            if (this.currentEnemyType === ENEMIES.SPIDERS &&
+            if (this.currentEnemyType === ENEMIES.GAME_END &&
               this.previousEnemyType === ENEMIES.DEMOGORGON) {
               console.log('[Demogorgon Beaten] arrowsNow=%s, arrowsAtStart=%s',
                 this.getArrows(),
@@ -261,7 +265,7 @@ class ForbiddenForest {
 
             return this.currentGameMode >= DIFFICULTY_GAME_MODES[GAME_MODES.TROOPER] &&
             this.previousEnemyType === ENEMIES.DEMOGORGON &&
-            this.currentEnemyType === ENEMIES.SPIDERS &&
+            this.currentEnemyType === ENEMIES.GAME_END &&
             this.getLives() >= 3 &&
             this.getArrows() === this.arrowsAtRoundStart - 1;
           }
