@@ -40,7 +40,7 @@ const ENEMIES = {
   PHANTOM: 16,
   SNAKE: 32,
   DEMOGORGON: 64,
-  GAME_END: 124,
+  GAME_END: 128,
 }
 
 const ENEMY_COUNT = {
@@ -140,19 +140,18 @@ class ForbiddenForest {
           break;
         case 'demogorgonParty':
           checkFn = () => {
-            return this.previousGameMode >= 1 &&
+            return this.currentGameMode >= 1 &&
               this.previousEnemyType === ENEMIES.DEMOGORGON &&
-              this.currentEnemyType === ENEMIES.SPIDERS &&
+              this.currentEnemyType === ENEMIES.GAME_END &&
               this.getLives() > 0
           }
           break;
         case 'ultimateMaster':
           checkFn = () => {
             return this.startingGameMode === DIFFICULTY_GAME_MODES[GAME_MODES.INNOCENT] &&
-              this.previousGameMode === DIFFICULTY_GAME_MODES[GAME_MODES.CRAZY] &&
-              this.getGameMode() === DIFFICULTY_GAME_MODES[GAME_MODES.INNOCENT] &&
+              this.getGameMode() === DIFFICULTY_GAME_MODES[GAME_MODES.CRAZY] &&
               this.previousEnemyType === ENEMIES.DEMOGORGON &&
-              this.currentEnemyType === ENEMIES.SPIDERS &&
+              this.currentEnemyType === ENEMIES.GAME_END &&
               this.getLives() > 0;
           }
           break;
@@ -252,7 +251,6 @@ class ForbiddenForest {
               this.getArrows() === this.arrowsAtRoundStart - ENEMY_COUNT.SNAKE[this.currentGameMode];
           }
           break;
-        // We may remove oneShotDemogorgon as it's extremely difficult.
         case 'oneShotDemogorgon':
           checkFn = () => {
             if (this.currentEnemyType === ENEMIES.GAME_END &&
