@@ -427,7 +427,8 @@ class ForbiddenForest {
     this.updateProgressState()
 
     const currentScore = this.getScore()
-    if (currentScore !== this.score && !this.isGameOver) {
+    if (currentScore !== this.score && !this.isGameOver && (currentScore !== 0 || this.score === 0)) {
+      // The game can clear its score memory in the same frame as game over.
       this.score = currentScore
     }
 

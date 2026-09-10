@@ -178,6 +178,35 @@ describe('Forbidden Forest Cheevos', () => {
     )
   })
 
+  test('preserves the final score when game over clears score memory', () => {
+    const postScore = vi.fn().mockResolvedValue({})
+    const memory = {
+      0x002a: 0x00,
+      0x002b: 0x30,
+      0x002c: 0x00,
+      0x002d: 0x00,
+      0x0055: 1,
+      0x005f: 3,
+      0x0069: 0x0c
+    }
+    const cheevos = createForbiddenForest(memory, { postScore })
+
+    cheevos.execute()
+    memory[0x002a] = 0
+    memory[0x002b] = 0
+    memory[0x002c] = 0
+    memory[0x002d] = 0
+    memory[0x005f] = 0
+    cheevos.execute()
+
+    expect(postScore).toHaveBeenCalledWith(
+      'forbidden-forest-game',
+      3000,
+      'user1',
+      'player1'
+    )
+  })
+
   test('does not submit duplicate scores while game-over state is polled repeatedly', () => {
     const postScore = vi.fn().mockResolvedValue({})
     const memory = {
