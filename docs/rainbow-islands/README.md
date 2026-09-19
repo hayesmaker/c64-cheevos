@@ -22,22 +22,34 @@ Known C64 memory addresses for Rainbow Islands.
 | `$009e-$009f` | Water Level              | `$009e` (Low) `$009f` (High) Normally Starts at `$00 $12` (or $fc $12 after a life lost). When Water rises Low decrements quickly and High byte decrements on each low byte rollover. Water rises as values decrement.  For achievement tracking high byte only tracking should be fine. | 
 | `$0076`       | Game Timer               | Starts at `$37`, decrements by `1` each second. When Below `0` it hits `$ff` and stays there and *"Hurry Up"* is announced                                                                                                                                                               |
 | `$0077`       | Secondary Game Timer     | Starts at `8` decrements by `1` each second after *"Hurry Up"* is announced. When Below `0` it hits `$ff` and stays there and Water level starts to rise                                                                                                                                 |
-| `$1165`       | Island Index             | `0` Index Island number                                                                                                                                                                                                                                                                  |
+| `$1165`       | Island Index             | `0` Index Island number `7` = game complete                                                                                                                                                                                                                                              |
 | `$1166`       | Round Index              | `0` Indexed Round Number                                                                                                                                                                                                                                                                 |
 
 
 ## Special Item Tracking
 - Tracked in Zero Page, and survive across game over and new game states as items collected in multiple playthroughs contribute to Secret Item bonuses. Do not use these for current active powerup state; use `$004E` instead.
 
-| Address | Items                    |
-|---------|--------------------------|
-| `$0058` | Boots collected          |
-| `$0059` | Red Potions collected    |
-| `$005a` | Yellow Potions collected |
-| `$005b` | Any Potions collected    |
-| `$005c` | Yellow Stars collected   |
-| `$005d` | Red Stars collected      |
-| `$005e` | Magic Ring collected     |
+| Address | Items                                |
+|---------|--------------------------------------|
+| `$0058` | Boots collected                      |
+| `$0059` | Red Potions collected                |
+| `$005a` | Yellow Potions collected             |
+| `$005b` | Any Potions collected                |
+| `$005c` | Yellow Stars collected               |
+| `$005d` | Red Stars collected                  |
+| `$005e` | Magic Ring collected                 |
+|         | Gold Necklace (Falling Stars Powerup | 
+
+## Permanent Item Tracking
+- Tracked in zero page and survive across lives (possibly credits)
+
+| Address | Description       | Speed Up | Rainbows x2/x3/x4   | Fast Rainbows |
+|---------|-------------------|----------|---------------------|---------------|
+| `$004e` | Active Powerup    | `$40`    | `$01`, `$02`, `$03` | `$04`         |
+| `$004f` | Permanent Upgrade | `$40`    | `$01`, `$02`, `$03` |
+
+
+
 
 
 ## Draft Achievement Set

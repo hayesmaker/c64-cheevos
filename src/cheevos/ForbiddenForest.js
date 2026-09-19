@@ -184,7 +184,8 @@ class ForbiddenForest {
           checkFn = () => {
             if (this.currentEnemyType === ENEMIES.DRAGONS &&
               this.previousEnemyType === ENEMIES.FROGS) {
-              console.log('[Frogs Beaten] arrowsNow=%s, arrowsAtStart=%s',
+              console.log('[Frogs Beaten] lives %s arrowsNow=%s, arrowsAtStart=%s',
+                this.getLives(),
                 this.getArrows(),
                 this.arrowsAtRoundStart,
                 ENEMY_COUNT.FROGS[this.currentGameMode])
@@ -202,7 +203,8 @@ class ForbiddenForest {
           checkFn = () => {
             if (this.currentEnemyType === ENEMIES.PHANTOM &&
               this.previousEnemyType === ENEMIES.DRAGONS) {
-              console.log('[Dragons Beaten] arrowsNow=%s, arrowsAtStart=%s',
+              console.log('[Dragons Beaten] lives=%s arrowsNow=%s, arrowsAtStart=%s',
+                this.getLives(),
                 this.getArrows(),
                 this.arrowsAtRoundStart,
                 ENEMY_COUNT.DRAGONS[this.currentGameMode])
@@ -223,7 +225,8 @@ class ForbiddenForest {
           checkFn = () => {
             if (this.currentEnemyType === ENEMIES.SNAKE &&
               this.previousEnemyType === ENEMIES.PHANTOM) {
-              console.log('[Phantom Beaten] arrowsNow=%s, arrowsAtStart=%s',
+              console.log('[Phantom Beaten] lives=%s arrowsNow=%s, arrowsAtStart=%s',
+                this.getLives(),
                 this.getArrows(),
                 this.arrowsAtRoundStart,
                 ENEMY_COUNT.PHANTOM[this.currentGameMode])
@@ -239,7 +242,8 @@ class ForbiddenForest {
           checkFn = () => {
             if (this.currentEnemyType === ENEMIES.DEMOGORGON &&
               this.previousEnemyType === ENEMIES.SNAKE) {
-              console.log('[Snake Beaten] arrowsNow=%s, arrowsAtStart=%s',
+              console.log('[Snake Beaten] lives=%s arrowsNow=%s, arrowsAtStart=%s',
+                this.getLives(),
                 this.getArrows(),
                 this.arrowsAtRoundStart,
                 ENEMY_COUNT.SNAKE[this.currentGameMode])
@@ -255,7 +259,8 @@ class ForbiddenForest {
           checkFn = () => {
             if (this.currentEnemyType === ENEMIES.GAME_END &&
               this.previousEnemyType === ENEMIES.DEMOGORGON) {
-              console.log('[Demogorgon Beaten] arrowsNow=%s, arrowsAtStart=%s',
+              console.log('[Demogorgon Beaten] lives=%s arrowsNow=%s, arrowsAtStart=%s',
+                this.getLives(),
                 this.getArrows(),
                 this.arrowsAtRoundStart,
                 ENEMY_COUNT.DEMOGORGON[this.currentGameMode])
