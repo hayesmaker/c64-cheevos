@@ -12,6 +12,8 @@ Game classes live in `src/cheevos` and are responsible for polling C64 memory, t
 
 Use `src/cheevos/CheevoTemplate.js` as the starting point for a new class, then copy proven patterns from games with similar memory layouts.
 
+To test a class live in the browser while playing a game, use c64-ready's cheevos development mode: [Testing cheevos in c64-ready](https://github.com/hayesmaker/c64-ready/blob/master/docs/CHEEVOS_DEVELOPMENT.md).
+
 ## Class Shape
 
 A game class should accept the standard constructor options and keep the public shape consistent with the existing classes:

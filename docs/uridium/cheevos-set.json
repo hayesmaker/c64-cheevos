@@ -1,0 +1,134 @@
+{
+  "_id": "uridium-dev-set",
+  "trackerFields": [
+    {
+      "key": "level",
+      "label": "Level",
+      "source": "field",
+      "field": "level"
+    },
+    {
+      "key": "fightersDestroyed",
+      "label": "Fighters",
+      "source": "field",
+      "field": "fightersDestroyed"
+    }
+  ],
+  "cheevos": [
+    {
+      "_id": "uridium-zinc",
+      "title": "Zinc",
+      "description": "Clear the Zinc dreadnought."
+    },
+    {
+      "_id": "uridium-lead",
+      "title": "Lead",
+      "description": "Clear the Lead dreadnought."
+    },
+    {
+      "_id": "uridium-copper",
+      "title": "Copper",
+      "description": "Clear the Copper dreadnought."
+    },
+    {
+      "_id": "uridium-silver",
+      "title": "Silver",
+      "description": "Clear the Silver dreadnought."
+    },
+    {
+      "_id": "uridium-iron",
+      "title": "Iron",
+      "description": "Clear the Iron dreadnought."
+    },
+    {
+      "_id": "uridium-gold",
+      "title": "Gold",
+      "description": "Clear the Gold dreadnought."
+    },
+    {
+      "_id": "uridium-platinum",
+      "title": "Platinum",
+      "description": "Clear the Platinum dreadnought."
+    },
+    {
+      "_id": "uridium-tungsten",
+      "title": "Tungsten",
+      "description": "Clear the Tungsten dreadnought."
+    },
+    {
+      "_id": "uridium-iridon",
+      "title": "Iridon",
+      "description": "Clear the Iridon dreadnought."
+    },
+    {
+      "_id": "uridium-kallisto",
+      "title": "Kallisto",
+      "description": "Clear the Kallisto dreadnought."
+    },
+    {
+      "_id": "uridium-tri-alloy",
+      "title": "Tri Alloy",
+      "description": "Clear the Tri Alloy dreadnought."
+    },
+    {
+      "_id": "uridium-quadminium",
+      "title": "Quadminium",
+      "description": "Clear the Quadminium dreadnought."
+    },
+    {
+      "_id": "uridium-ergonite",
+      "title": "Ergonite",
+      "description": "Clear the Ergonite dreadnought."
+    },
+    {
+      "_id": "uridium-galactium",
+      "title": "Galactium",
+      "description": "Clear the Galactium dreadnought."
+    },
+    {
+      "_id": "uridium-great-shot-turkey",
+      "title": "Great Shot Turkey",
+      "description": "Clear the fifteenth dreadnought."
+    },
+    {
+      "_id": "uridium-novice-pilot",
+      "title": "Novice Pilot",
+      "description": "Score at least 10,000 points."
+    },
+    {
+      "_id": "uridium-experienced-pilot",
+      "title": "Experienced Pilot",
+      "description": "Score at least 25,000 points."
+    },
+    {
+      "_id": "uridium-veteran-pilot",
+      "title": "Veteran Pilot",
+      "description": "Score at least 50,000 points."
+    },
+    {
+      "_id": "uridium-elite-pilot",
+      "title": "Elite Pilot",
+      "description": "Score at least 100,000 points."
+    },
+    {
+      "_id": "uridium-ace",
+      "title": "Uridium Ace",
+      "description": "Score at least 150,000 points."
+    },
+    {
+      "_id": "uridium-meltdown",
+      "title": "Meltdown",
+      "description": "Complete a dreadnought destruct sequence."
+    },
+    {
+      "_id": "uridium-cleared-hot",
+      "title": "Cleared Hot",
+      "description": "Destroy all enemy formations on a dreadnought."
+    },
+    {
+      "_id": "uridium-dog-fighter",
+      "title": "Dog Fighter",
+      "description": "Placeholder achievement for fighter-destroyed tracking."
+    }
+  ]
+}
