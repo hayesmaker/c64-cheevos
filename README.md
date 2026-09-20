@@ -2,15 +2,15 @@
 
 Open source Commodore 64 games achievements and high scores tracking.
 
-Contributions welcome from C64 game devs who would like to add their games to C64Cade. Or from 
-anyone who would like to see their favourite game added to C64Cade.  C64Cade lets players play
+Contributions welcome from C64 game devs who would like to add their games to C64Cade. Or from
+anyone who would like to see their favourite game added to C64Cade. C64Cade lets players play
 C64 games with global high score leaderboards and achievements.
 
 Ultimately I hope that one day the emulator devs will pull their thumbs out and add
-support for RetroAchievements.  The game achievements already added here could then be used 
- in C64 RetroAchievements.
+support for RetroAchievements. The game achievements already added here could then be used
+in C64 RetroAchievements.
 
-For a guide in adding support for your game to the repo follow the Documentation here: 
+For a guide in adding support for your game to the repo follow the Documentation here:
 [Writing game class files](docs/game-class-guide.md)
 
 For live browser testing while developing game classes, see the c64-ready guide:
@@ -21,27 +21,27 @@ The usage guide below is for those wishing to use C64-cheevos in their own proje
 ## Games Support
 
 All games with high score checkmarks are available to play in [C64Cade](https://c64cade.com) with global high score leaderboards.  
-All games with achievement checkmarks have achievements that can be unlocked in [C64Cade](https://c64cade.com).  
+All games with achievement checkmarks have achievements that can be unlocked in [C64Cade](https://c64cade.com).
 
 | Game                   | Detector ID         | High Scores | Achievements |
-|------------------------|---------------------|-------------|--------------|
-| Beach Head             | `beach-head`        | ✅           | ❌            |
-| Chuckie Egg            | `chuckie-egg`       | ✅           | ❌            |
-| Forbidden Forest       | `forbidden-forest`  | ✅           | ❌            |
-| Galaga                 | `galaga`            | ✅           | ❌            |
-| Gribbly's Day Out      | `gribbly`           | ✅           | ❌            |
-| Hercules               | `hercules`          | ✅           | ❌            |
-| Legend of Wilf         | `legend-of-wilf`    | ✅           | ❌            |
-| Mario's Cement Factory | `mario-cf`          | ✅           | ✅            |
-| Mole Attack            | `mole-attack`       | ✅           | ❌            |
-| Munchy Worm            | `munchy-worm`       | ✅           | ❌            |
-| Park Patrol            | `park-patrol`       | ❌           | ❌            |
-| Potty Pigeon           | `potty-pigeon`      | ✅           | ❌            |
-| Stix                   | `stix`              | ✅           | ❌            |
-| Tilt                   | `tilt`              | ✅           | ❌            |
-| Up 'n Down             | `up-n-down`         | ✅           | ❌            |
-| Uridium                | `uridium`           | ✅           | ✅            |
-| Vegetables Deluxe      | `vegetables-deluxe` | ✅           | ❌            |
+| ---------------------- | ------------------- | ----------- | ------------ |
+| Beach Head             | `beach-head`        | ✅          | ❌           |
+| Chuckie Egg            | `chuckie-egg`       | ✅          | ❌           |
+| Forbidden Forest       | `forbidden-forest`  | ✅          | ❌           |
+| Galaga                 | `galaga`            | ✅          | ❌           |
+| Gribbly's Day Out      | `gribbly`           | ✅          | ❌           |
+| Hercules               | `hercules`          | ✅          | ❌           |
+| Legend of Wilf         | `legend-of-wilf`    | ✅          | ❌           |
+| Mario's Cement Factory | `mario-cf`          | ✅          | ✅           |
+| Mole Attack            | `mole-attack`       | ✅          | ❌           |
+| Munchy Worm            | `munchy-worm`       | ✅          | ❌           |
+| Park Patrol            | `park-patrol`       | ❌          | ❌           |
+| Potty Pigeon           | `potty-pigeon`      | ✅          | ❌           |
+| Stix                   | `stix`              | ✅          | ❌           |
+| Tilt                   | `tilt`              | ✅          | ❌           |
+| Up 'n Down             | `up-n-down`         | ✅          | ❌           |
+| Uridium                | `uridium`           | ✅          | ✅           |
+| Vegetables Deluxe      | `vegetables-deluxe` | ✅          | ❌           |
 
 ## Install
 
@@ -57,27 +57,27 @@ npm install c64-cheevos
 ## Usage
 
 ```js
-import { Uridium } from 'c64-cheevos'
+import { Uridium } from "c64-cheevos";
 
 const cheevos = new Uridium({
-  gameId: 'game-id',
-  user: { id: 'user-id', username: 'player' },
+  gameId: "game-id",
+  user: { id: "user-id", username: "player" },
   cheevosSet,
   poppedCheevos: [],
   postScore: async (gameId, score, userId, username, variant) => {},
   popCheevo: async (cheevosSetId, userId, cheevoId) => ({
-    achievement: { title: 'Achievement', description: 'Unlocked' }
-  })
-})
+    achievement: { title: "Achievement", description: "Unlocked" },
+  }),
+});
 
-cheevos.cpuReadNS = (addr) => emulator.cpuReadNS(addr)
-cheevos.ramRead = (addr) => emulator.ramRead(addr)
+cheevos.cpuReadNS = (addr) => emulator.cpuReadNS(addr);
+cheevos.ramRead = (addr) => emulator.ramRead(addr);
 
 // Call execute in a RAF loop to check current RAM for achievements and score / lives / game over updates:
-function update () {
-   cheevos.execute();
-   requestAnimationFrame(update);
-};
+function update() {
+  cheevos.execute();
+  requestAnimationFrame(update);
+}
 
 requestAnimationFrame(update);
 ```
@@ -106,10 +106,10 @@ Events are emitted through each instance's `watcher` from `signal-js`.
 Host applications can avoid their own game switch statements by using `createCheevos`:
 
 ```js
-import { createCheevos } from 'c64-cheevos'
+import { createCheevos } from "c64-cheevos";
 
-const id = 'uridium'
-const cheevos = await createCheevos(id, options)
+const id = "uridium";
+const cheevos = await createCheevos(id, options);
 ```
 
 Registered detector IDs include values such as `uridium`, `mario-cf`, `tilt`, and `galaga`. Unknown IDs return `CheevoTemplate`.
@@ -118,3 +118,12 @@ Registered detector IDs include values such as `uridium`, `mario-cf`, `tilt`, an
 
 - [Writing game class files](docs/game-class-guide.md)
 - [Testing cheevos in c64-ready](https://github.com/hayesmaker/c64-ready/blob/master/docs/CHEEVOS_DEVELOPMENT.md)
+
+Publish Guide:
+
+1. Open/merge changes PR
+2. Pull latest master.
+3. Run tests: npm test.
+4. Bump version on master: npm version {version0}. eg: npm version 0.5.0
+5. Push commit and tag: git push origin master --follow-tags.
+6. Publish: npm publish.
