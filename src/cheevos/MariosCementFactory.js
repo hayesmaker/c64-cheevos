@@ -84,17 +84,17 @@ class MariosCementFactory {
           break
         case 'verbalWarning':
           checkFn = () => {
-            return this.livesLost === 1
+            return this.livesLost === 1 && !this.isGameOver;
           }
           break
         case 'finalWarning':
           checkFn = () => {
-            return this.livesLost === 2
+            return this.livesLost === 2 && !this.isGameOver;
           }
           break
         case 'grossMisconduct':
           checkFn = () => {
-            return this.livesLost === 3
+            return this.livesLost === 3;
           }
           break
         case 'doubleScoreFactory':
@@ -134,13 +134,14 @@ class MariosCementFactory {
       }
     })
     this.score = 0
-    this.livesLost = 0
+    this.livesLost = 255
     this.location = {
       row: 0,
       col: 0
     }
     this.hasReachedEscapeFloor = false
     this.scoreSubmitted = false
+    this.isGameOver = true;
   }
 
   getGameMode = () => {
@@ -181,18 +182,20 @@ class MariosCementFactory {
 
     const currentLivesLost = this.getLives()
 
-    if (currentLivesLost === 0 && currentLivesLost !== this.livesLost) {
+    if (currentLivesLost === 0 && currentLivesLost !== this.livesLost && this.isGameOver) {
       console.log('New Game')
       this.livesLost = currentLivesLost
       this.scoreSubmitted = false
       this.watcher.dispatch('newGame', {
         gameMode: this.getGameMode()
       })
+      this.isGameOver = false;
     }
 
     if (currentLivesLost === 3 && this.livesLost === 2 && !this.scoreSubmitted) {
       this.scoreSubmitted = true
       const gameMode = this.getGameMode()
+      this.isGameOver = true;
       this.watcher.dispatch('gameOver', {
         score: this.score,
         gameMode

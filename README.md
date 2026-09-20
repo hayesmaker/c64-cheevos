@@ -13,6 +13,9 @@ support for RetroAchievements.  The game achievements already added here could t
 For a guide in adding support for your game to the repo follow the Documentation here: 
 [Writing game class files](docs/game-class-guide.md)
 
+For live browser testing while developing game classes, see the c64-ready guide:
+[Testing cheevos in c64-ready](https://github.com/hayesmaker/c64-ready/blob/master/docs/CHEEVOS_DEVELOPMENT.md)
+
 The usage guide below is for those wishing to use C64-cheevos in their own projects.
 
 ## Games Support
@@ -114,3 +117,4 @@ Registered detector IDs include values such as `uridium`, `mario-cf`, `tilt`, an
 ## Documentation
 
 - [Writing game class files](docs/game-class-guide.md)
+- [Testing cheevos in c64-ready](https://github.com/hayesmaker/c64-ready/blob/master/docs/CHEEVOS_DEVELOPMENT.md)

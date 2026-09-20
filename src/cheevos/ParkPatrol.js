@@ -9,6 +9,17 @@ const MEM_SCORE_3 = 0x3d18
 const MEM_LIVES = 0x3d0f
 
 class ParkPatrol {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: MEM_LIVES, length: 10, label: 'Lives and score' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('ParkPatrol::constructor', gameId, cheevosSet)
     this._popCheevo = popCheevo
@@ -63,9 +74,7 @@ class ParkPatrol {
 
 
   newGameCheck() {
-    // return parseInt(this.cpuReadNS(MEM_GRIBBLY_BANK), 10) === 80 &&
-    //   parseInt(this.cpuReadNS(MEM_GRIBBLY_PSI), 10) === 40 &&
-    //   parseInt(this.cpuReadNS(MEM_IN_GAME), 10) === 2;
+    return this.isGameOver && this.getLives() > 0
   }
 
   execute() {
@@ -83,6 +92,7 @@ class ParkPatrol {
 
     if (this.isGameOver && this.newGameCheck()) {
       this.newGameVars()
+      this.watcher.dispatch('newGame', {})
       // this.isGameOver = false;
     }
 

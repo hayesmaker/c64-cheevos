@@ -13,6 +13,17 @@ import { camelize, convertMemToScoreDigits } from '../helpers/string-utils.js'
  * Tanks:      960f    00-08
  */
 class BeachHead {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: 0x9600, length: 17, label: 'Game state and score' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('Beach Head initialized', cheevosSet, gameId);
     this._popCheevo = popCheevo;
@@ -90,6 +101,9 @@ class BeachHead {
     if (currentShips === 10 && currentShips !== this.ships) {
       this.score = 0;
       this.isGameOver = false;
+      this.watcher.dispatch('newGame', {
+        gameMode: this.getSkillLevel()
+      });
       console.log("New Game", this.ships, this.tanks, this.score);
     }
 

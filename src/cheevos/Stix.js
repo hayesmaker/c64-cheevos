@@ -10,6 +10,20 @@ const GAME_OVER_FLAG = 0x4b23;  //0 is game over screen
 const MEM_RESET = 0x4b0b;
 
 class Stix {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: MEM_RESET, length: 1, label: 'Reset state' },
+      { address: GAME_OVER_FLAG, length: 1, label: 'Game over state' },
+      { address: MEM_LIVES, length: 4, label: 'Lives and score' },
+      { address: MEM_PLAYER_HIT, length: 1, label: 'Player hit' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('Stix::constructor', gameId, cheevosSet);
     this._popCheevo = popCheevo;
@@ -77,8 +91,9 @@ class Stix {
       console.log('Stix.score=', this.score);
     }
 
-    if (this.newGameCheck()) {
+    if (this.isGameOver && this.newGameCheck()) {
       this.newGameVars();
+      this.watcher.dispatch('newGame', {})
       // this.isGameOver = false;
     }
 

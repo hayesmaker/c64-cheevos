@@ -11,6 +11,17 @@ const MEM_SCORE_3 = 0x284a
 const MEM_SCORE_4 = 0x2849
 
 class MunchyWorm {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: GAME_STATE_FLAG, length: 6, label: 'Game state and score' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('MunchyWorm-v2::constructor', gameId);
     this._popCheevo = popCheevo;
@@ -73,6 +84,7 @@ class MunchyWorm {
 
     if (this.isGameOver && this.newGameCheck()) {
       this.newGameVars();
+      this.watcher.dispatch('newGame', {})
     }
 
     if (!this.isGameOver && this.getIsDead()) {

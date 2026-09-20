@@ -8,6 +8,18 @@ const MEM_IN_GAME = 0x0050;  //0 = game over; 1 = in game
 
 
 class MoleAttack {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: MEM_SCORE_1, length: 2, label: 'Score' },
+      { address: MEM_IN_GAME, length: 1, label: 'Game state' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('MoleAttack::constructor', gameId, cheevosSet);
     this._popCheevo = popCheevo;
@@ -65,6 +77,7 @@ class MoleAttack {
 
     if (this.isGameOver && this.newGameCheck()) {
       this.newGameVars();
+      this.watcher.dispatch('newGame', {})
       // this.isGameOver = false;
     }
 

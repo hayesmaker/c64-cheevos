@@ -13,6 +13,19 @@ const MEM_IN_GAME = 0x009d        // 2 = game - 1 = main menu
 
 
 class Gribbly {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: MEM_SCORE_0, length: 4, label: 'Score' },
+      { address: MEM_GRIBBLY_PSI, length: 6, label: 'Player state' },
+      { address: MEM_IN_GAME, length: 1, label: 'Game state' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('Gribbley::constructor', gameId, cheevosSet)
     this._popCheevo = popCheevo
@@ -77,6 +90,7 @@ class Gribbly {
 
     if (this.isGameOver && this.newGameCheck()) {
       this.newGameVars()
+      this.watcher.dispatch('newGame', {})
       // this.isGameOver = false;
     }
 

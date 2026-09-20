@@ -4,10 +4,10 @@ Known C64 memory addresses for Rainbow Islands.
 
 ## Title Screen
 
-| Address | Purpose | Notes |
-| --- | --- | --- |
-| `$18B3` | Credits | Stored as `$40 + credit_count`. For example, `$40` = 0 credits, `$41` = 1 credit, `$45` = 5 credits. |
-| `$C3E6` | Displayed credits | Screen/display mirror of `$18B3`; use `$18B3` for game state. |
+| Address | Purpose           | Notes                                                                                                |
+|---------|-------------------|------------------------------------------------------------------------------------------------------|
+| `$18B3` | Credits           | Stored as `$40 + credit_count`. For example, `$40` = 0 credits, `$41` = 1 credit, `$45` = 5 credits. |
+| `$C3E6` | Displayed credits | Screen/display mirror of `$18B3`; use `$18B3` for game state.                                        |
 
 ## In Game
 
@@ -20,22 +20,39 @@ Known C64 memory addresses for Rainbow Islands.
 | `$00AD`       | Diamond order progress | Starts at `6` and decrements by `1` each time the next correct-order diamond is collected: red, orange, yellow, green, light blue, dark blue, violet. Reaches `0` after all diamonds are collected in order.                                                                             |
 | `$00AE`       | Diamond order mistakes | Increments by `1` when a diamond is collected out of order. Remains `0` when all diamonds are collected in correct order.                                                                                                                                                                |
 | `$009e-$009f` | Water Level            | `$009e` (Low) `$009f` (High) Normally Starts at `$00 $12` (or $fc $12 after a life lost). When Water rises Low decrements quickly and High byte decrements on each low byte rollover. Water rises as values decrement.  For achievement tracking high byte only tracking should be fine. | 
-| `$0076` | Game Timer             | Starts at `$37`, decrements by `1` each second. When Below `0` it hits `$ff` and stays there and *"Hurry Up"* is announced                                                                                                                                                               |
-| `$0077` | Secondary Game Timer   | Starts at `8` decrements by `1` each second after *"Hurry Up"* is announced. When Below `0` it hits `$ff` and stays there and Water level starts to rise                                                                                                                                 |
+| `$0076`       | Game Timer             | Starts at `$37`, decrements by `1` each second. When Below `0` it hits `$ff` and stays there and *"Hurry Up"* is announced                                                                                                                                                               |
+| `$0077`       | Secondary Game Timer   | Starts at `8` decrements by `1` each second after *"Hurry Up"* is announced. When Below `0` it hits `$ff` and stays there and Water level starts to rise                                                                                                                                 |
+| `$1165`       | Island Index           | `00` Index Island number `7` = game complete                                                                                                                                                                                                                                             |
+| `$1166`       | Round Index            | `00` Indexed Round Number                                                                                                                                                                                                                                                                |
+| `$0061`       | Death counter          | `00` at start of session, increases by 1 each death. Loops around to `00` after `09` and survives resets                                                                                                                                                                                 | 
+| `$0064`       | Hurry Ups              | `00` at start of sesson, increase by one each hurry up. Survives resets.                                                                                                                                                                                                                 | 
 
 
 ## Special Item Tracking
 - Tracked in Zero Page, and survive across game over and new game states as items collected in multiple playthroughs contribute to Secret Item bonuses. Do not use these for current active powerup state; use `$004E` instead.
 
-| Address | Items                    |
-|---------|--------------------------|
-| `$0058` | Boots collected          |
-| `$0059` | Red Potions collected    |
-| `$005a` | Yellow Potions collected |
-| `$005b` | Any Potions collected    |
-| `$005c` | Yellow Stars collected   |
-| `$005d` | Red Stars collected      |
-| `$005e` | Magic Ring collected     |
+| Address | Items                    | Powerup                                       |
+|---------|--------------------------|-----------------------------------------------|
+| `$0058` | Boots collected          | Speed Upgrade                                 | 
+| `$0059` | Red Potions collected    | Extra Rainbows (max 3, though 4 are possible) |
+| `$005a` | Yellow Potions collected | Fast Rainbows                                 |   
+| `$005b` | Any Potions collected    |                                               |
+| `$005c` | Yellow Stars collected   |                                               |
+| `$005d` | Red Stars collected      |                                               |
+| `$005e` | Magic Ring collected     |                                               |
+| `$0060` | Gold Necklace collected  | Falling stars powerup                         |
+
+
+## Permanent Item Tracking
+- Tracked in zero page and survive across lives (possibly credits)
+
+| Address | Description       | Speed Up | Rainbows x2/x3/x4   | Fast Rainbows | Wings |
+|---------|-------------------|----------|---------------------|---------------|-------|
+| `$004e` | Active Powerup    | `$40`    | `$01`, `$02`, `$03` | `$04`         | `$80` |
+| `$004f` | Permanent Upgrade | `$40`    | `$01`, `$02`, `$03` | `$04`         | `$80` |
+
+
+
 
 
 ## Draft Achievement Set
@@ -44,81 +61,82 @@ Draft set focused on achievements that should be practical to track from simple 
 
 ### Progression
 
-| Title | Description | Tracking Notes |
-| --- | --- | --- |
-| Somewhere Over the Rainbow | Clear Island 1. | Award on transition from Island 1 boss defeated to Island 2. |
-| Bug Spray | Defeat the Island 2 boss. | Award on transition from Island 2 boss defeated to Island 3. |
-| Toybox Takedown | Clear Island 3. | Award on transition from Island 3 boss defeated to Island 4. |
-| Mechanical Weather | Clear Island 4. | Award on transition from Island 4 boss defeated to Island 5. |
-| Dinosaur Downpour | Clear Island 5. | Award on transition from Island 5 boss defeated to Island 6. |
-| Magical Forecast | Clear Island 6. | Award on transition from Island 6 boss defeated to Island 7. |
-| Rainbow's End | Clear Island 7 and complete the game. | Award on final boss clear or ending state. |
-| Island Hopper | Reach Island 4 without using a continue. | Gate with continue/credit-use tracking. |
-| Seven-Color Journey | Reach Island 7 without using a continue. | Gate with continue/credit-use tracking. |
-| Clear Skies Ahead | Complete the game without using a continue. | Gate with continue/credit-use tracking. |
+| Title                          | Description                                 | Tracking Notes                                               |
+|--------------------------------|---------------------------------------------|--------------------------------------------------------------|
+| Bug Spray                      | Clear Island 1. Insect Island               | Award on transition from Island 1 boss defeated to Island 2. |
+| Helikopter, Helikopter         | Clear Island 2. Combat Island               | Award on transition from Island 2 boss defeated to Island 3. |
+| Do the Mash                    | Clear Island 3. Monster Island              | Award on transition from Island 3 boss defeated to Island 4. |
+| Toy Story                      | Clear Island 4. Toy Island                  | Award on transition from Island 4 boss defeated to Island 5. |
+| Revenge on DOH!                | Clear Island 5. Doh Island                  | Award on transition from Island 5 boss defeated to Island 6. |
+| The Droids you're looking for? | Clear Island 6. Robot Island                | Award on transition from Island 6 boss defeated to Island 7. |
+| End of the Rainbow!            | Clear Island 7. Dragon Island               | Award on final boss clear or ending state.                   |
+| Island Hopper                  | Reach Island 4 without using a continue.    | Gate with continue/credit-use tracking.                      |
+| There be Dragons               | Reach Island 7 without using a continue.    | Gate with continue/credit-use tracking.                      |
+| Pot of Gold                    | Complete the game without using a continue. | Gate with continue/credit-use tracking.                      |
 
 ### Diamonds And Permanent Powerups
 
-| Title | Description | Tracking Notes |
-| --- | --- | --- |
-| Proper Spectrum: Insect Island | Collect the seven diamonds on Island 1 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 1. |
-| Proper Spectrum: Combat Island | Collect the seven diamonds on Island 2 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 2. |
-| Proper Spectrum: Monster Island | Collect the seven diamonds on Island 3 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 3. |
-| Proper Spectrum: Toy Island | Collect the seven diamonds on Island 4 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 4. |
-| Proper Spectrum: Doh's Island | Collect the seven diamonds on Island 5 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 5. |
-| Proper Spectrum: Robot Island | Collect the seven diamonds on Island 6 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 6. |
-| Proper Spectrum: Dragon Island | Collect the seven diamonds on Island 7 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 7. |
-| Permanent Collection | Unlock any permanent powerup. | Award when any permanent powerup flag changes from unset to set. |
-| Double Permanent | Unlock two permanent powerups in one playthrough. | Count permanent powerup flags or island-order successes. |
-| Rainbow Mastery | Unlock all seven permanent powerups in one playthrough. | Count all seven permanent powerup flags or all island-order successes. |
+| Title                           | Description                                                                                   | Tracking Notes                                                   |
+|---------------------------------|-----------------------------------------------------------------------------------------------|------------------------------------------------------------------|
+| Proper Spectrum: Insect Island  | Collect the seven diamonds on Island 1 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 1.           |
+| Proper Spectrum: Combat Island  | Collect the seven diamonds on Island 2 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 2.           |
+| Proper Spectrum: Monster Island | Collect the seven diamonds on Island 3 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 3.           |
+| Proper Spectrum: Toy Island     | Collect the seven diamonds on Island 4 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 4.           |
+| Proper Spectrum: Doh's Island   | Collect the seven diamonds on Island 5 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 5.           |
+| Proper Spectrum: Robot Island   | Collect the seven diamonds on Island 6 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 6.           |
+| Proper Spectrum: Dragon Island  | Collect the seven diamonds on Island 7 in the correct order and reveal the boss-room powerup. | Use `$00AD == 0` and `$00AE == 0`, scoped to Island 7.           |
+| Permanent Collection            | Unlock any permanent powerup.                                                                 | Award when any permanent powerup flag changes from unset to set. |
+| Double Permanent                | Unlock two permanent powerups in one playthrough.                                             | Count permanent powerup flags or island-order successes.         |
+| Good Ending                     | Unlock all seven big diamonds in one playthrough.                                             | Count all seven big diamond flags and all island successes.      |
 
 ### Powerups
 
-| Title | Description | Tracking Notes |
-| --- | --- | --- |
-| Permanent Advantage | Defeat a boss after unlocking that island's permanent powerup. | Gate boss clear with that island's permanent powerup available or collected. |
-| Fully Equipped | Hold max rainbow power, max rainbow speed, and max movement speed at the same time. | Use `$004E`: bits 0-1 equal `2`, bit 2 `$04` set, and bit 6 `$40` set. |
-| Fast Forecast | Obtain the permanent speed upgrade. | Needs confirmed permanent speed flag. |
-| Double Rainbow | Obtain max active rainbow count. | Use `$004E` bits 0-1 equal `2`. |
-| Quick Casting | Obtain active fast-rainbow power. | Use `$004E` bit 2 `$04` set. |
+| Title                   | Description                                                                         | Tracking Notes                                                         |
+|-------------------------|-------------------------------------------------------------------------------------|------------------------------------------------------------------------|
+| Forgot the Shilver Door | Defeat a boss after spawning a permanent powerup, but refuse to collect it          |                                                                        |
+| Fully Equipped          | Hold max rainbow power, max rainbow speed, and max movement speed at the same time. | Use `$004E`: bits 0-1 equal `2`, bit 2 `$04` set, and bit 6 `$40` set. |
+| Fast Forecast           | Obtain the permanent speed upgrade.                                                 | Needs confirmed permanent speed flag.                                  |
+| Double Rainbow          | Obtain max active rainbow count.                                                    | Use `$004E` bits 0-1 equal `2`.                                        |
+| Quick Casting           | Obtain active fast-rainbow power.                                                   | Use `$004E` bit 2 `$04` set.                                           |
 
 ### Boss Challenges
 
-| Title | Description | Tracking Notes |
-| --- | --- | --- |
-| No Shelter Needed | Defeat any island boss without dying during the boss fight. | Track lives from boss-room entry to boss clear. |
-| Bug Boss Perfect | Defeat the Island 1 boss without dying in the boss room. | Track lives from Island 1 boss-room entry to boss clear. |
-| Midgame Stormbreaker | Defeat the Island 4 boss without dying in the boss room. | Track lives from Island 4 boss-room entry to boss clear. |
-| Final Forecast | Defeat the Island 7 boss without dying in the boss room. | Track lives from Island 7 boss-room entry to final boss clear. |
-| Boss Rush Discipline | Defeat three bosses in one playthrough without dying during any boss fight. | Count no-death boss clears during the active run. |
+| Title                  | Description                                                                 | Tracking Notes                                                 |
+|------------------------|-----------------------------------------------------------------------------|----------------------------------------------------------------|
+| Give Spider the boot   | Defeat Bosses with only boots upgrade                                       |                                                                |
+| # No Shelter Needed    | Defeat any island boss without dying during the boss fight.                 | Track lives from boss-room entry to boss clear.                |
+| # Bug Boss Perfect     | Defeat the Island 1 boss without dying in the boss room.                    | Track lives from Island 1 boss-room entry to boss clear.       |
+| # Midgame Stormbreaker | Defeat the Island 4 boss without dying in the boss room.                    | Track lives from Island 4 boss-room entry to boss clear.       |
+| # Final Forecast       | Defeat the Island 7 boss without dying in the boss room.                    | Track lives from Island 7 boss-room entry to final boss clear. |
+| Boss Rush Discipline   | Defeat three bosses in one playthrough without dying during any boss fight. | Count no-death boss clears during the active run.              |
 
 ### Survival
 
-| Title | Description | Tracking Notes |
-| --- | --- | --- |
-| Dry Landing | Clear Island 1 without losing a life. | Compare lives at Island 1 start and Island 2 transition. |
-| Careful Climber | Clear any full island without losing a life. | Compare lives at island start and next-island transition. |
-| Halfway Untouched | Clear the first three islands without losing a life. | Compare lives from run start to Island 4 transition. |
-| One Credit Rainbow | Complete the game on one credit. | Gate final clear with no continue use. |
-| No Mist Over Rainbow Island | Complete the game without losing a life. | Compare lives from run start to final clear. |
+| Title                       | Description                                          | Tracking Notes                                            |
+|-----------------------------|------------------------------------------------------|-----------------------------------------------------------|
+| Dry Landing                 | Clear Island 1 without losing a life.                | Compare lives at Island 1 start and Island 2 transition.  |
+| Careful Climber             | Clear any full island without losing a life.         | Compare lives at island start and next-island transition. |
+| Halfway Untouched           | Clear the first three islands without losing a life. | Compare lives from run start to Island 4 transition.      |
+| One Credit Rainbow          | Complete the game on one credit.                     | Gate final clear with no continue use.                    |
+| No Mist Over Rainbow Island | Complete the game without losing a life.             | Compare lives from run start to final clear.              |
 
 ### Score And Treasure
 
-| Title | Description | Tracking Notes |
-| --- | --- | --- |
-| Pot of Gold | Reach 100,000 points. | Use `$115B-$115E` score. |
-| Treasure Hunter | Reach 250,000 points. | Use `$115B-$115E` score. |
-| Rainbow Millionaire | Reach 1,000,000 points. | Use `$115B-$115E` score; confirm this is realistic for the C64 version. |
-| Rich in Color | Finish an island with all seven diamonds collected. | Use `$00A3 == $7F` before or during island completion. |
-| Diamond Habit | Finish three different islands with all seven diamonds collected in one playthrough. | Count islands completed with `$00A3 == $7F`. |
+| Title               | Description                                                                          | Tracking Notes                                                          |
+|---------------------|--------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| Pot of Gold         | Reach 100,000 points.                                                                | Use `$115B-$115E` score.                                                |
+| Treasure Hunter     | Reach 250,000 points.                                                                | Use `$115B-$115E` score.                                                |
+| Rainbow Millionaire | Reach 1,000,000 points.                                                              | Use `$115B-$115E` score; confirm this is realistic for the C64 version. |
+| Rich in Color       | Finish an island with all seven diamonds collected.                                  | Use `$00A3 == $7F` before or during island completion.                  |
+| Diamond Habit       | Finish three different islands with all seven diamonds collected in one playthrough. | Count islands completed with `$00A3 == $7F`.                            |
 
 ### Stage-Specific Candidates
 
-| Title | Description | Tracking Notes |
-| --- | --- | --- |
-| Out of the Water | Escape the hurry-up water after it appears on any stage. | Needs confirmed water/hurry-up state and stage-clear transition. |
-| Last-Second Rainbow | Clear a round while the hurry-up danger is active. | Needs confirmed hurry-up state and round-clear transition. |
-| Upward Mobility | Clear any round after reaching the top platform area. | Needs player Y-position and round-clear transition. |
+| Title               | Description                                              | Tracking Notes                                                   |
+|---------------------|----------------------------------------------------------|------------------------------------------------------------------|
+| Out of the Water    | Escape the hurry-up water after it appears on any stage. | Needs confirmed water/hurry-up state and stage-clear transition. |
+| Last-Second Rainbow | Clear a round while the hurry-up danger is active.       | Needs confirmed hurry-up state and round-clear transition.       |
+| Upward Mobility     | Clear any round after reaching the top platform area.    | Needs player Y-position and round-clear transition.              |
 
 ### Implementation Notes
 

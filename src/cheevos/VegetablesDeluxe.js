@@ -4,10 +4,11 @@ import { camelize, convertMemToScoreDigits } from '../helpers/string-utils.js'
 const MEM_SCORE_1 = 0x51c4;
 const MEM_SCORE_2 = 0x51c5;
 const MEM_SCORE_3 = 0x51c6;
-const GAME_MODE   = 0x08c9;
-const MEM_SHUFFLES    = 0x51cb;
-const MEM_IN_GAME     = 0x00c5;  // 3e in menus, 40 in game
 
+const GAME_MODE   = 0x08c9;
+const MEM_SHUFFLES= 0x51cb;
+
+const MEM_IN_GAME = 0x0314; // $8C in menus, $95 or $ab in game
 
 /**
  * 0x51c4 = score1 (low 2 digits bcd)
@@ -17,6 +18,19 @@ const MEM_IN_GAME     = 0x00c5;  // 3e in menus, 40 in game
  * 0x08c9 = gameMode:  0 = casual / 1 = shopping / 2 = classic / 3 = countdown
  */
 class VegetablesDeluxe {
+  static ultimate = {
+    pollIntervalMs: 250,
+    memoryRanges: [
+      { address: MEM_IN_GAME, length: 1, label: 'Game state' },
+      { address: GAME_MODE, length: 1, label: 'Game mode' },
+      { address: MEM_SCORE_1, length: 8, label: 'Score and shuffles' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('Vegetables Deluxe initialized', cheevosSet, gameId);
     this.gameModes = ["casual", "shopping", "classic", "countdown"];
@@ -44,8 +58,9 @@ class VegetablesDeluxe {
   }
 
   resetGameVars() {
-    this.score = this.getScore();
-    this.shuffles = this.getShuffles();
+    this.score = 0;
+    this.shuffles = 0;
+    this.gameMode = -1;
     this.isGameOver = true;
   }
 
@@ -77,48 +92,56 @@ class VegetablesDeluxe {
   }
 
   newGameCheck = () => {
-    return this.isGameOver &&  parseInt(this.cpuReadNS(MEM_IN_GAME), 10) === 64 && this.shuffles === 1;
+    if (!this.isGameOver || this.cpuReadNS(MEM_IN_GAME) === 0x8c) {
+      return false;
+    }
+    if (
+      this.isGameOver && (
+        this.cpuReadNS(MEM_IN_GAME) === 0xab ||
+        this.cpuReadNS(MEM_IN_GAME) === 0x95)) {
+      console.log('Starting new game score=', this.getScore());
+      return true;
+    }
+    return false;
   }
 
   inMenuCheck = () => {
-    // console.log(parseInt(this.cpuReadNS(MEM_IN_GAME), 10));
-    return !this.isGameOver && parseInt(this.cpuReadNS(MEM_IN_GAME), 10) === 62;
+    return !this.isGameOver && this.cpuReadNS(MEM_IN_GAME) === 0x8c;
   }
 
   execute = () => {
+    let currentScore = this.getScore();
+    let currentShuffles = this.getShuffles();
+    if (currentShuffles !== this.shuffles) {
+      this.shuffles = currentShuffles;
+      if (this.gameOverCheck()) {
+        console.log("GameOver gameMode=%s | score=%s", this.gameMode, currentScore);
+        this.isGameOver = true;
+        this.watcher.dispatch('gameOver', {
+          score: currentScore,
+        });
+        this.postScore(currentScore);
+      }
+      console.log('this.currentShuffles=', this.shuffles, this.score);
+    }
+
     if (this.inMenuCheck()) {
       console.log('game reset');
       this.isGameOver = true;
     }
 
     if (this.newGameCheck()) {
-      // console.log("New Game");
       this.isGameOver = false;
       this.newGameVars();
-      console.log('New Game::mode:', this.gameMode, "{%s}", this.gameModeStr());
+      this.watcher.dispatch('newGame', {
+        gameMode: this.gameMode
+      });
+      console.log('New Game::mode=%s (%s)', this.gameMode, this.gameModeStr());
     }
 
-    let currentScore = this.getScore();
-    if (currentScore !== this.score) {
+    if (!this.isGameOver && currentScore !== this.score) {
       this.score = currentScore;
     }
-
-    let currentShuffles = this.getShuffles();
-    if (currentShuffles !== this.shuffles) {
-      this.shuffles = currentShuffles;
-      console.log('this.currentShuffles=', this.shuffles, this.score);
-    }
-
-    if (this.gameOverCheck()) {
-      console.log("GameOver", this.gameMode);
-      this.isGameOver = true;
-      this.watcher.dispatch('gameOver', {
-        score: this.score,
-      });
-     this.postScore();
-    }
-
-
 
     this.cheevosMap.forEach(c => {
       if (!c.isPopped && c.check()) {
@@ -138,21 +161,19 @@ class VegetablesDeluxe {
     }
   }
 
-  postScore() {
-    console.log('Post Score:', this.score, 'gameMode:', this.gameMode, "{%s}", this.gameModeStr());
+  postScore(score) {
+    console.log('Post Score:', score, 'gameMode:', this.gameMode, "{%s}", this.gameModeStr());
     if (this.gameMode === -1) {
       this.watcher.dispatch('cheevo', {
         title: `Casual game`,
-        message: `Casual Mode has no leaderboard, Your score was: ${this.score}`
+        message: `Casual Mode has no leaderboard, Your score was: ${score}`
       });
       return;
     }
 
-
-
     this._postScore(
       this.gameId,
-      this.score,
+      score,
       this.user.id,
       this.user.username,
       this.gameMode,
@@ -160,7 +181,7 @@ class VegetablesDeluxe {
       console.log('Score posted successfully', res);
       this.watcher.dispatch('cheevo', {
         title: `Score Submit Success`,
-        message: `Your score of ${this.score} has been submitted to the Vegetables ${this.gameModeStr()} Leaderboard!`
+        message: `Your score of ${score} has been submitted to the Vegetables ${this.gameModeStr()} Leaderboard!`
       });
       this.resetGameVars();
     });

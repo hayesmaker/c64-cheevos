@@ -12,6 +12,21 @@ const MEM_POWER = 0xcfb2;       // 0 when out of power, 48($30) when full power
 const MEM_HAS_POWER = 0xcfb5;   // 0 when out of power, 1 when has some power
 
 class Tilt {
+  static ultimate = {
+    pollIntervalMs: 1000,
+    memoryRanges: [
+      { address: MEM_IN_GAME, length: 1, label: 'Game state' },
+      { address: MEM_SUB_LEVEL, length: 15, label: 'Level state' },
+      { address: MEM_SCORE_1, length: 3, label: 'Score' },
+      { address: MEM_NEW_BALL, length: 1, label: 'Ball state' },
+      { address: MEM_POWER, length: 4, label: 'Power state' }
+    ]
+  }
+
+  static get ultimateMemoryRanges() {
+    return this.ultimate.memoryRanges
+  }
+
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
     console.log('Tilt::constructor', gameId, cheevosSet);
     this._popCheevo = popCheevo;
@@ -75,6 +90,7 @@ class Tilt {
     if (this.isGameOver && this.newGameCheck()) {
       console.log('Tilt::NewGame!', this.score);
       this.isGameOver = false;
+      this.watcher.dispatch('newGame', {})
     }
 
     const currentScore = this.getScore();
