@@ -11,42 +11,45 @@ Known C64 memory addresses for Rainbow Islands.
 
 ## In Game
 
-| Address       | Purpose                  | Notes                                                                                                                                                                                                                                                                                    |
-|---------------|--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `$115B-$115E` | Player score             | Stored as decimal pairs, highest decimals first. Example: `$115B=00`, `$115C=01`, `$115D=80`, `$115E=60` represents `18060`.                                                                                                                                                             |
-| `$1160`       | Player lives             | `0` is the last life. `$FF` means game over.                                                                                                                                                                                                                                             |
-| `$004E`       | Current powerup state    | Active current-life powerups. Bits 0-1 are red potion/rainbow count level: `0` normal, `1` one red potion/two rainbows, `2` two red potions/max three rainbows. Bit 2 `$04` is yellow potion/quick rainbows. Bit 6 `$40` is boots/faster movement. Powerups are lost on death.           |
-| `$00A3`       | Collected diamonds       | Bitfield: bit 6/red `$40`, bit 5/orange `$20`, bit 4/yellow `$10`, bit 3/green `$08`, bit 2/light blue `$04`, bit 1/dark blue `$02`, bit 0/violet `$01`.                                                                                                                                 |
-| `$00AD`       | Diamond order progress   | Starts at `6` and decrements by `1` each time the next correct-order diamond is collected: red, orange, yellow, green, light blue, dark blue, violet. Reaches `0` after all diamonds are collected in order.                                                                             |
-| `$00AE`       | Diamond order mistakes   | Increments by `1` when a diamond is collected out of order. Remains `0` when all diamonds are collected in correct order.                                                                                                                                                                |
-| `$009e-$009f` | Water Level              | `$009e` (Low) `$009f` (High) Normally Starts at `$00 $12` (or $fc $12 after a life lost). When Water rises Low decrements quickly and High byte decrements on each low byte rollover. Water rises as values decrement.  For achievement tracking high byte only tracking should be fine. | 
-| `$0076`       | Game Timer               | Starts at `$37`, decrements by `1` each second. When Below `0` it hits `$ff` and stays there and *"Hurry Up"* is announced                                                                                                                                                               |
-| `$0077`       | Secondary Game Timer     | Starts at `8` decrements by `1` each second after *"Hurry Up"* is announced. When Below `0` it hits `$ff` and stays there and Water level starts to rise                                                                                                                                 |
-| `$1165`       | Island Index             | `0` Index Island number `7` = game complete                                                                                                                                                                                                                                              |
-| `$1166`       | Round Index              | `0` Indexed Round Number                                                                                                                                                                                                                                                                 |
+| Address       | Purpose                | Notes                                                                                                                                                                                                                                                                                    |
+|---------------|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `$115B-$115E` | Player score           | Stored as decimal pairs, highest decimals first. Example: `$115B=00`, `$115C=01`, `$115D=80`, `$115E=60` represents `18060`.                                                                                                                                                             |
+| `$1160`       | Player lives           | `0` is the last life. `$FF` means game over.                                                                                                                                                                                                                                             |
+| `$004E`       | Current powerup state  | Active current-life powerups. Bits 0-1 are red potion/rainbow count level: `0` normal, `1` one red potion/two rainbows, `2` two red potions/max three rainbows. Bit 2 `$04` is yellow potion/quick rainbows. Bit 6 `$40` is boots/faster movement. Powerups are lost on death.           |
+| `$00A3`       | Collected diamonds     | Bitfield: bit 6/red `$40`, bit 5/orange `$20`, bit 4/yellow `$10`, bit 3/green `$08`, bit 2/light blue `$04`, bit 1/dark blue `$02`, bit 0/violet `$01`.                                                                                                                                 |
+| `$00AD`       | Diamond order progress | Starts at `6` and decrements by `1` each time the next correct-order diamond is collected: red, orange, yellow, green, light blue, dark blue, violet. Reaches `0` after all diamonds are collected in order.                                                                             |
+| `$00AE`       | Diamond order mistakes | Increments by `1` when a diamond is collected out of order. Remains `0` when all diamonds are collected in correct order.                                                                                                                                                                |
+| `$009e-$009f` | Water Level            | `$009e` (Low) `$009f` (High) Normally Starts at `$00 $12` (or $fc $12 after a life lost). When Water rises Low decrements quickly and High byte decrements on each low byte rollover. Water rises as values decrement.  For achievement tracking high byte only tracking should be fine. | 
+| `$0076`       | Game Timer             | Starts at `$37`, decrements by `1` each second. When Below `0` it hits `$ff` and stays there and *"Hurry Up"* is announced                                                                                                                                                               |
+| `$0077`       | Secondary Game Timer   | Starts at `8` decrements by `1` each second after *"Hurry Up"* is announced. When Below `0` it hits `$ff` and stays there and Water level starts to rise                                                                                                                                 |
+| `$1165`       | Island Index           | `00` Index Island number `7` = game complete                                                                                                                                                                                                                                             |
+| `$1166`       | Round Index            | `00` Indexed Round Number                                                                                                                                                                                                                                                                |
+| `$0061`       | Death counter          | `00` at start of session, increases by 1 each death. Loops around to `00` after `09` and survives resets                                                                                                                                                                                 | 
+| `$0064`       | Hurry Ups              | `00` at start of sesson, increase by one each hurry up. Survives resets.                                                                                                                                                                                                                 | 
 
 
 ## Special Item Tracking
 - Tracked in Zero Page, and survive across game over and new game states as items collected in multiple playthroughs contribute to Secret Item bonuses. Do not use these for current active powerup state; use `$004E` instead.
 
-| Address | Items                                |
-|---------|--------------------------------------|
-| `$0058` | Boots collected                      |
-| `$0059` | Red Potions collected                |
-| `$005a` | Yellow Potions collected             |
-| `$005b` | Any Potions collected                |
-| `$005c` | Yellow Stars collected               |
-| `$005d` | Red Stars collected                  |
-| `$005e` | Magic Ring collected                 |
-|         | Gold Necklace (Falling Stars Powerup | 
+| Address | Items                    | Powerup                                       |
+|---------|--------------------------|-----------------------------------------------|
+| `$0058` | Boots collected          | Speed Upgrade                                 | 
+| `$0059` | Red Potions collected    | Extra Rainbows (max 3, though 4 are possible) |
+| `$005a` | Yellow Potions collected | Fast Rainbows                                 |   
+| `$005b` | Any Potions collected    |                                               |
+| `$005c` | Yellow Stars collected   |                                               |
+| `$005d` | Red Stars collected      |                                               |
+| `$005e` | Magic Ring collected     |                                               |
+| `$0060` | Gold Necklace collected  | Falling stars powerup                         |
+
 
 ## Permanent Item Tracking
 - Tracked in zero page and survive across lives (possibly credits)
 
-| Address | Description       | Speed Up | Rainbows x2/x3/x4   | Fast Rainbows |
-|---------|-------------------|----------|---------------------|---------------|
-| `$004e` | Active Powerup    | `$40`    | `$01`, `$02`, `$03` | `$04`         |
-| `$004f` | Permanent Upgrade | `$40`    | `$01`, `$02`, `$03` |
+| Address | Description       | Speed Up | Rainbows x2/x3/x4   | Fast Rainbows | Wings |
+|---------|-------------------|----------|---------------------|---------------|-------|
+| `$004e` | Active Powerup    | `$40`    | `$01`, `$02`, `$03` | `$04`         | `$80` |
+| `$004f` | Permanent Upgrade | `$40`    | `$01`, `$02`, `$03` | `$04`         | `$80` |
 
 
 

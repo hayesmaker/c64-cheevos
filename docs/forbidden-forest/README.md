@@ -119,25 +119,25 @@ const activeEnemyKills = mem[0x0041] - mem[0x005e];
 
 `$004E` identifies the active enemy wave:
 
-| Enemy | `$004E` | `$005E` baseline | Innocent kills required |
-|-------|--------:|-----------------:|------------------------:|
-| Spiders | `$01` | `0` | `4` |
-| Bees | `$02` | `5` | `1` |
-| Frogs | `$04` | `7` | `6` |
-| Dragons | `$08` | `14` | `1` |
+| Enemy   | `$004E` | `$005E` baseline | Innocent kills required |
+|---------|---------|------------------|-------------------------|
+| Spiders | `$01`   | `0`              | `4`                     |
+| Bees    | `$02`   | `5`              | `1`                     |
+| Frogs   | `$04`   | `7`              | `6`                     |
+| Dragons | `$08`   | `14`             | `1`                     |
 
 The kills required above are only for the easiest skill setting, `innocent`. Higher skill settings require different kill counts.
 
 Observed active-wave kill counts from the named dumps:
 
-| Dump | `$0041` | `$005E` | Active kills |
-|------|--------:|--------:|-------------:|
-| `spiders-0-kills-0-shots.bin` | `0` | `0` | `0` |
-| `spiders-1-kills-1-shots.bin` | `1` | `0` | `1` |
-| `spiders-2-kills-2-shots.bin` | `2` | `0` | `2` |
-| `frogs-0-kills-0-shots.bin` | `7` | `7` | `0` |
-| `frogs-2-kills-2-shots.bin` | `9` | `7` | `2` |
-| `frogs-5-kills-5-shots.bin` | `12` | `7` | `5` |
+| Dump                          | `$0041` | `$005E` | Active kills |
+|-------------------------------|---------|---------|--------------|
+| `spiders-0-kills-0-shots.bin` | `0`     | `0`     | `0`          |
+| `spiders-1-kills-1-shots.bin` | `1`     | `0`     | `1`          |
+| `spiders-2-kills-2-shots.bin` | `2`     | `0`     | `2`          |
+| `frogs-0-kills-0-shots.bin`   | `7`     | `7`     | `0`          |
+| `frogs-2-kills-2-shots.bin`   | `9`     | `7`     | `2`          |
+| `frogs-5-kills-5-shots.bin`   | `12`    | `7`     | `5`          |
 
 Celebration dumps appear to be taken after transition to the next enemy wave. For example, `frogs-6-kills-celebration.bin` has `$0041 = 14`, `$005E = 14`, and `$004E = $08`, which means it has already advanced to dragons.
 

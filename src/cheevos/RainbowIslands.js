@@ -12,6 +12,13 @@ const GAME_OVER_LIVES = 0xff
 const DIAMOND_COLLECTED = 0x00ad
 const DIAMOND_MISTAKES = 0x00ae
 const CREDITS = 0x18B3
+const ACTIVE_POWER_UP = 0x004e
+const PERM_POWER_UP = 0x004f
+
+const SPEED_UP = 0x40
+const WINGS_UP = 0x80
+const DOUBLE_RAINBOWS = 0x01
+const FAST_RAINBOWS = 0x04
 
 
 class RainbowIslands {
@@ -24,6 +31,7 @@ class RainbowIslands {
       { address: ISLAND_NUMBER, length: 1, label: 'Island' },
       { address: DIAMOND_COLLECTED, length: 2, label: 'DiamondOrder' },
       { address: CREDITS, length: 1, label: 'Credits' },
+      { address: ACTIVE_POWER_UP, length: 2, label: 'Powerups' },
     ]
   }
 
@@ -109,7 +117,30 @@ class RainbowIslands {
             return this.islandNumber === 7 && this.cpuReadNS(CREDITS) === 0;
           }
           break;
-        default:
+        case 'needForSpeed':
+          checkFn = () => {
+            return (this.cpuReadNS(PERM_POWER_UP) & SPEED_UP) >= SPEED_UP;
+          }
+          break;
+        case 'redPotionMastery':
+          checkFn = () => {
+            return (this.cpuReadNS(PERM_POWER_UP) & DOUBLE_RAINBOWS) >= DOUBLE_RAINBOWS;
+          }
+          break;
+        case 'yellowPotionMastery':
+          checkFn = () => {
+            return (this.cpuReadNS(PERM_POWER_UP) & FAST_RAINBOWS) === FAST_RAINBOWS;
+          }
+          break;
+        case 'bookOfWings':
+          checkFn = () => {
+            return (this.cpuReadNS(PERM_POWER_UP) & WINGS_UP) === WINGS_UP;
+          }
+          break;
+
+          default:
+
+            break;
       }
 
       return {
