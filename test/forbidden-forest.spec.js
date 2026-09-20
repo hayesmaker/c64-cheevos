@@ -25,7 +25,8 @@ const ENEMY = {
   dragons: 8,
   phantom: 16,
   snake: 32,
-  demogorgon: 64
+  demogorgon: 64,
+  gameEnd: 128
 }
 
 const createCheevo = (title) => ({
@@ -272,7 +273,7 @@ describe('Forbidden Forest Cheevos', () => {
     expect(popCheevo).not.toHaveBeenCalled()
   })
 
-  test('pops demogorgonParty on Trooper Demogorgon to Spider transition', () => {
+  test('pops demogorgonParty on Trooper Demogorgon to game-end transition', () => {
     const popCheevo = vi.fn().mockResolvedValue({
       achievement: { title: 'Demogorgon Party', description: 'Defeated Demogorgon' }
     })
@@ -294,7 +295,7 @@ describe('Forbidden Forest Cheevos', () => {
 
     cheevos.execute()
     memory[ADDR.currentKills] = 0x00
-    memory[ADDR.currentEnemyType] = ENEMY.spiders
+    memory[ADDR.currentEnemyType] = ENEMY.gameEnd
     memory[ADDR.waveBaseline] = 0x16
     memory[ADDR.difficulty] = DIFFICULTY.daredevil
     cheevos.execute()
@@ -302,7 +303,7 @@ describe('Forbidden Forest Cheevos', () => {
     expect(popCheevo).toHaveBeenCalledWith('set1', 'user1', 'demogorgon-party')
   })
 
-  test('pops demogorgonParty when Crazy wraps back to Innocent', () => {
+  test('pops demogorgonParty when Crazy reaches game-end state', () => {
     const popCheevo = vi.fn().mockResolvedValue({
       achievement: { title: 'Demogorgon Party', description: 'Defeated Demogorgon' }
     })
@@ -324,9 +325,9 @@ describe('Forbidden Forest Cheevos', () => {
 
     cheevos.execute()
     memory[ADDR.currentKills] = 0x00
-    memory[ADDR.currentEnemyType] = ENEMY.spiders
+    memory[ADDR.currentEnemyType] = ENEMY.gameEnd
     memory[ADDR.waveBaseline] = 0x00
-    memory[ADDR.difficulty] = DIFFICULTY.innocent
+    memory[ADDR.difficulty] = DIFFICULTY.crazy
     cheevos.execute()
 
     expect(popCheevo).toHaveBeenCalledWith('set1', 'user1', 'demogorgon-party')
@@ -342,7 +343,7 @@ describe('Forbidden Forest Cheevos', () => {
     expect(popCheevo).not.toHaveBeenCalled()
   })
 
-  test('pops ultimateMaster when Crazy Demogorgon wraps to Innocent Spiders after starting on Innocent', () => {
+  test('pops ultimateMaster when Crazy Demogorgon reaches game-end state after starting on Innocent', () => {
     const memory = createActiveGameMemory({ enemy: ENEMY.spiders, difficulty: DIFFICULTY.innocent })
     const { achievement, cheevos, popCheevo } = createAchievementTest('Ultimate Master', memory)
 
@@ -350,8 +351,7 @@ describe('Forbidden Forest Cheevos', () => {
     memory[ADDR.currentEnemyType] = ENEMY.demogorgon
     memory[ADDR.difficulty] = DIFFICULTY.crazy
     cheevos.execute()
-    memory[ADDR.currentEnemyType] = ENEMY.spiders
-    memory[ADDR.difficulty] = DIFFICULTY.innocent
+    memory[ADDR.currentEnemyType] = ENEMY.gameEnd
     cheevos.execute()
 
     expect(popCheevo).toHaveBeenCalledWith('set1', 'user1', achievement._id)
@@ -362,8 +362,7 @@ describe('Forbidden Forest Cheevos', () => {
     const { cheevos, popCheevo } = createAchievementTest('Ultimate Master', memory)
 
     cheevos.execute()
-    memory[ADDR.currentEnemyType] = ENEMY.spiders
-    memory[ADDR.difficulty] = DIFFICULTY.innocent
+    memory[ADDR.currentEnemyType] = ENEMY.gameEnd
     cheevos.execute()
 
     expect(popCheevo).not.toHaveBeenCalled()
