@@ -1,0 +1,121 @@
+{
+  "_id": "6a90cd28ca3ef9414ed82b62",
+  "romPath": "/home/haymaker64/Retro/C64/one-load-v5.7-all/Rainbow Islands (by $olo1870) [EasyFlash].crt",
+  "cheevos": [
+    {
+      "_id": "pot-of-gold",
+      "title": "Pot of Gold",
+      "description": "Score 250,000 points"
+    },
+    {
+      "_id": "big-food",
+      "title": "Big Food",
+      "description": "Score 500,000 points"
+    },
+    {
+      "_id": "big-whoop",
+      "title": "Big Whoop",
+      "description": "Score 1 million points"
+    },
+    {
+      "_id": "bug-spray",
+      "title": "Bug Spray",
+      "description": "Clear Island 1 - Insect Island"
+    },
+    {
+      "_id": "helikopter-helikopter",
+      "title": "Helikopter Helikopter",
+      "description": "Clear Isand 2 - Combat Island"
+    },
+    {
+      "_id": "do-the-mash",
+      "title": "Do the Mash",
+      "description": "Clear Island 3 - Monster Island"
+    },
+    {
+      "_id": "toy-story",
+      "title": "Toy Story",
+      "description": "Clear Island 4 - Toy Island"
+    },
+    {
+      "_id": "revenge-on-doh",
+      "title": "Revenge on DOH!",
+      "description": "Clear Island 5 - Doh  Island"
+    },
+    {
+      "_id": "the-droids",
+      "title": "The Droids You're Looking For?",
+      "description": "Clear Island 6 - Robot Island"
+    },
+    {
+      "_id": "end-of-the-rainbow",
+      "title": "End of the Rainbow!",
+      "description": "Clear Island 7 - Dragon Island and beat the game"
+    },
+    {
+      "_id": "the-1cc",
+      "title": "The 1CC!",
+      "description": "Complete the game on 1 credit."
+    },
+    {
+      "_id": "perma-boots",
+      "title": "Need For Speed",
+      "description": "Collect the permanent boots upgrade"
+    },
+    {
+      "_id": "red-potion",
+      "title": "Red Potion Mastery",
+      "description": "Collect the secret red potion for permanent double rainbows upgrade"
+    },
+    {
+      "_id": "yellow-potion",
+      "title": "Yellow Potion Mastery",
+      "description": "Collect the secret yellow potion for permenent yellow potion upgrade"
+    },
+    {
+      "_id": "redbull",
+      "title": "Redbull ",
+      "description": "Collect the Book of Wings for permanent wings upgrade"
+    },
+    {
+      "_id": "shilver-door",
+      "title": "Shilver Door",
+      "description": "Go through the shilver door to warp directly to Dragon Island"
+    },
+    {
+      "_id": "birds-of-a-feather",
+      "title": "Birds of a Feather",
+      "description": "Collect the secret feathers to get permenent fairy protection upgrade"
+    },
+    {
+      "_id": "ring-the-bell",
+      "title": "Ring the Bell",
+      "description": "Complete the final level perfectly and collect the secret in the final boss room"
+    },
+    {
+      "_id": "rainbow-veteran",
+      "title": "Rainbow Veteran",
+      "description": "Collect 2 Permanent uprades in a single playthrough"
+    },
+    {
+      "_id": "rainbow-elite",
+      "title": "Rainbow Elite",
+      "description": "Collect 3 permanent upgrades in a single playthrough"
+    },
+    {
+      "_id": "rainbow-ultimate",
+      "title": "Rainbow Ultimate Master",
+      "description": "Collect 4 Permanent upgrades in a single playthrough"
+    },
+    {
+      "_id": "good-ending",
+      "title": "Good Ending",
+      "description": "Collect all the big diamonds or permanent upgrades to beat the game for a good ending#"
+    },
+    {
+      "_id": "perfect-collection",
+      "title": "Perfect Collection",
+      "description": "Collect all diamonds in the correct order on Insect Island"
+    }
+  ]
+}

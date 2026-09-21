@@ -46,13 +46,11 @@ Known C64 memory addresses for Rainbow Islands.
 ## Permanent Item Tracking
 - Tracked in zero page and survive across lives (possibly credits)
 
-| Address | Description       | Speed Up | Rainbows x2/x3/x4   | Fast Rainbows | Wings |
-|---------|-------------------|----------|---------------------|---------------|-------|
-| `$004e` | Active Powerup    | `$40`    | `$01`, `$02`, `$03` | `$04`         | `$80` |
-| `$004f` | Permanent Upgrade | `$40`    | `$01`, `$02`, `$03` | `$04`         | `$80` |
-
-
-
+| Address | Description       | Speed Up | Rainbows x2/x3/x4   | Fast Rainbows | Wings | Shilver Door |
+|---------|-------------------|----------|---------------------|---------------|-------|--------------|
+| `$004e` | Active Powerup    | `$40`    | `$01`, `$02`, `$03` | `$04`         | `$80` |              |
+| `$004f` | Permanent Upgrade | `$40`    | `$01`, `$02`, `$03` | `$04`         | `$80` |              |
+| `$00a8` | Shilver Door      |          |                     |               |       | `$05`        | 
 
 
 ## Draft Achievement Set

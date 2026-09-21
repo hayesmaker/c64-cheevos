@@ -1,5 +1,6 @@
 {
   "_id": "uridium-dev-set",
+  "romPath": "~/C64/Uridium.d64",
   "trackerFields": [
     {
       "key": "level",

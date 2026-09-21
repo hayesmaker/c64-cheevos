@@ -14,6 +14,7 @@ const DIAMOND_MISTAKES = 0x00ae
 const CREDITS = 0x18B3
 const ACTIVE_POWER_UP = 0x004e
 const PERM_POWER_UP = 0x004f
+const ISLAND_FLAG = 0x00a8
 
 const SPEED_UP = 0x40
 const WINGS_UP = 0x80
@@ -32,6 +33,7 @@ class RainbowIslands {
       { address: DIAMOND_COLLECTED, length: 2, label: 'DiamondOrder' },
       { address: CREDITS, length: 1, label: 'Credits' },
       { address: ACTIVE_POWER_UP, length: 2, label: 'Powerups' },
+      { address: ISLAND_FLAG, length: 2, label: 'IslandFlag'}
     ]
   }
 
@@ -40,7 +42,7 @@ class RainbowIslands {
   }
 
   constructor({ gameId, user, cheevosSet = { cheevos: [] }, poppedCheevos = [], popCheevo = async () => {}, postScore = async () => ({}) }) {
-    this.name = 'Rainbow Islands (Twitch Live4)'
+    this.name = 'Rainbow Islands (LOCAL)'
     console.log(`${this.name} - LIVE`, gameId)
     this._popCheevo = popCheevo
     this.postScore = postScore
@@ -135,6 +137,13 @@ class RainbowIslands {
         case 'bookOfWings':
           checkFn = () => {
             return (this.cpuReadNS(PERM_POWER_UP) & WINGS_UP) === WINGS_UP;
+          }
+          break;
+        case 'shilverDoor':
+          checkFn = () => {
+            // this will pop as soon as the Shilver Door is Collected on Round 20;
+            // Potentilally use Island Number and check if it goes from 5->7 in one hop.
+            return this.roundNumber === 19 && this.cpuReadNS(ISLAND_FLAG) === 5;
           }
           break;
 
