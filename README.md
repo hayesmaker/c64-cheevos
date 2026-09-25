@@ -24,24 +24,25 @@ All games with high score checkmarks are available to play in [C64Cade](https://
 All games with achievement checkmarks have achievements that can be unlocked in [C64Cade](https://c64cade.com).
 
 | Game                   | Detector ID         | High Scores | Achievements |
-| ---------------------- | ------------------- | ----------- | ------------ |
-| Beach Head             | `beach-head`        | ✅          | ❌           |
-| Chuckie Egg            | `chuckie-egg`       | ✅          | ❌           |
-| Forbidden Forest       | `forbidden-forest`  | ✅          | ❌           |
-| Galaga                 | `galaga`            | ✅          | ❌           |
-| Gribbly's Day Out      | `gribbly`           | ✅          | ❌           |
-| Hercules               | `hercules`          | ✅          | ❌           |
-| Legend of Wilf         | `legend-of-wilf`    | ✅          | ❌           |
-| Mario's Cement Factory | `mario-cf`          | ✅          | ✅           |
-| Mole Attack            | `mole-attack`       | ✅          | ❌           |
-| Munchy Worm            | `munchy-worm`       | ✅          | ❌           |
-| Park Patrol            | `park-patrol`       | ❌          | ❌           |
-| Potty Pigeon           | `potty-pigeon`      | ✅          | ❌           |
-| Stix                   | `stix`              | ✅          | ❌           |
-| Tilt                   | `tilt`              | ✅          | ❌           |
-| Up 'n Down             | `up-n-down`         | ✅          | ❌           |
-| Uridium                | `uridium`           | ✅          | ✅           |
-| Vegetables Deluxe      | `vegetables-deluxe` | ✅          | ❌           |
+| ---------------------- | ------------------- |-------------|--------------|
+| Beach Head             | `beach-head`        | ✅           | ❌            |
+| Chuckie Egg            | `chuckie-egg`       | ✅           | ❌            |
+| Forbidden Forest       | `forbidden-forest`  | ✅           | ✅            |
+| Galaga                 | `galaga`            | ✅           | ❌            |
+| Gribbly's Day Out      | `gribbly`           | ✅           | ❌            |
+| Hercules               | `hercules`          | ✅           | ❌            |
+| Legend of Wilf         | `legend-of-wilf`    | ✅           | ❌            |
+| Mario's Cement Factory | `mario-cf`          | ✅           | ✅            |
+| Mole Attack            | `mole-attack`       | ✅           | ❌            |
+| Munchy Worm            | `munchy-worm`       | ✅           | ❌            |
+| Park Patrol            | `park-patrol`       | ❌           | ❌            |
+| Potty Pigeon           | `potty-pigeon`      | ✅           | ❌            |
+| Rainbow Islands        | `rainbow-islands    | ✅           | ✅            | 
+| Stix                   | `stix`              | ✅           | ❌            |
+| Tilt                   | `tilt`              | ✅           | ❌            |
+| Up 'n Down             | `up-n-down`         | ✅           | ❌            |
+| Uridium                | `uridium`           | ✅           | ✅            |
+| Vegetables Deluxe      | `vegetables-deluxe` | ✅           | ❌            |
 
 ## Install
 

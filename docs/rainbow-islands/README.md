@@ -27,6 +27,19 @@ Known C64 memory addresses for Rainbow Islands.
 | `$0061`       | Death counter          | `00` at start of session, increases by 1 each death. Loops around to `00` after `09` and survives resets                                                                                                                                                                                 | 
 | `$0064`       | Hurry Ups              | `00` at start of sesson, increase by one each hurry up. Survives resets.                                                                                                                                                                                                                 | 
 
+## Ending Tracking
+end
+1165 = a1
+1166 = 14
+1167 = a9
+
+Bad End
+06f8 = 0f
+06f9 = 0f
+
+Good end:
+06f8 = 0c
+06f9 = 0c
 
 ## Special Item Tracking
 - Tracked in Zero Page, and survive across game over and new game states as items collected in multiple playthroughs contribute to Secret Item bonuses. Do not use these for current active powerup state; use `$004E` instead.

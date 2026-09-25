@@ -16,5 +16,6 @@ export const cheevosRegistry = {
   'tilt': () => import('./cheevos/Tilt.js'),
   'up-n-down': () => import('./cheevos/UpNDown.js'),
   'uridium': () => import('./cheevos/Uridium.js'),
-  'vegetables-deluxe': () => import('./cheevos/VegetablesDeluxe.js')
+  'vegetables-deluxe': () => import('./cheevos/VegetablesDeluxe.js'),
+  'action-biker': () => import('./cheevos/ActionBiker.js'),
 }

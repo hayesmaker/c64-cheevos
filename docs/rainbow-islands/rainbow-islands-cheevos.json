@@ -113,6 +113,11 @@
       "description": "Collect all the big diamonds or permanent upgrades to beat the game for a good ending#"
     },
     {
+      "_id": "wings-of-death",
+      "title": "Wings of Death",
+      "description": "Die while using the wings power up"
+    },
+    {
       "_id": "perfect-collection",
       "title": "Perfect Collection",
       "description": "Collect all diamonds in the correct order on Insect Island"
