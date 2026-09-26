@@ -1,0 +1,206 @@
+{
+  "_id": "action-biker",
+  "romPath": "/home/haymaker64/Retro/C64/one-load-v5.7-all/Action Biker.crt",
+  "cheevos": [
+    {
+      "_id": "crash-helmet",
+      "title": "Don't ride without one",
+      "description": "Collect your first item: The Crash Helmet"
+    },
+    {
+      "_id": "riding-leathers",
+      "title": "Hell For Leathers",
+      "description": "Collect the Riding Leathers"
+    },
+    {
+      "_id": "highway-code",
+      "title": "Passed Your Theory",
+      "description": "Collect the Highway Code Book"
+    },
+    {
+      "_id": "gearbox",
+      "title": "Metal Gear",
+      "description": "Collected the Gearbox enabling Low Gear"
+    },
+    {
+      "_id": "gloves",
+      "title": "Kid Gloves",
+      "description": "Collect the Gloves"
+    },
+    {
+      "_id": "headlamp",
+      "title": "Night Rider",
+      "description": "Get the headlamp"
+    },
+    {
+      "_id": "petro-gauge",
+      "title": "Petrol Gauge",
+      "description": "Get the Petrol Gauge"
+    },
+    {
+      "_id": "large-fuel-tank",
+      "title": "Gas Guzzler",
+      "description": "Collect the large fuel tank and fill the tank to maximum"
+    },
+    {
+      "_id": "tool-box",
+      "title": "All Tooled Up",
+      "description": "Collect the Tool Box"
+    },
+    {
+      "_id": "mudguards",
+      "title": "Puddle of Mud",
+      "description": "Equip the mudguards"
+    },
+    {
+      "_id": "sunglasses",
+      "title": "I'll Be Back",
+      "description": "Find some shades"
+    },
+    {
+      "_id": "fairing",
+      "title": "Need For Speed",
+      "description": "Unlock the engine's full potential by collecting the Fairing and ride at full speed "
+    },
+    {
+      "_id": "can-of-pop",
+      "title": "Thirsty Work",
+      "description": "Collect a can of pop"
+    },
+    {
+      "_id": "visor",
+      "title": "Hyper Visor",
+      "description": "Find the visor"
+    },
+    {
+      "_id": "exhaust-pipe",
+      "title": "High Emission Zone",
+      "description": "Find and fit the Exhaust Pipe"
+    },
+    {
+      "_id": "power-brakes",
+      "title": "Where are the brakes?",
+      "description": "Find the power brakes and unlock improved braking performance"
+    },
+    {
+      "_id": "speedometer",
+      "title": "Speedos",
+      "description": "Collect the Speedometer"
+    },
+    {
+      "_id": "brake-lamp",
+      "title": "Master of the lamps",
+      "description": "Find the Brake Lamp"
+    },
+    {
+      "_id": "oil-can",
+      "title": "Jamie Olive Oil",
+      "description": "Get the oil can"
+    },
+    {
+      "_id": "turbo-charge",
+      "title": "Turbo Charged!",
+      "description": "Fit the Turbo Charger and unlock imroved acceleration"
+    },
+    {
+      "_id": "cooling-fins",
+      "title": "Only Fins",
+      "description": "Find the Cooling Fins"
+    },
+    {
+      "_id": "indicators",
+      "title": "You've got them, use them!",
+      "description": "Collect the indicators"
+    },
+    {
+      "_id": "mirror",
+      "title": "Mirror, signal manouvre",
+      "description": "Collect the mirror"
+    },
+    {
+      "_id": "two-tone-horn",
+      "title": "Tommy Tutone",
+      "description": "Fit the two tone horn"
+    },
+    {
+      "_id": "reflectors",
+      "title": "Raise Reflectors!",
+      "description": "Collect the Reflectors"
+    },
+    {
+      "_id": "road-map",
+      "title": "A to Z",
+      "description": "Collect the Road Map"
+    },
+    {
+      "_id": "electric-starter",
+      "title": "Twisted Electric Starter",
+      "description": "Collect the Electric Starter"
+    },
+    {
+      "_id": "lunch-box",
+      "title": "Packed the Skips!",
+      "description": "Collect the Lunch Box and enjoy some melt on your tongue, prawn cocktail K.P. Skips"
+    },
+    {
+      "_id": "cb-radio",
+      "title": "10-4 Good Buddy",
+      "description": "Collect the C.B Radio"
+    },
+    {
+      "_id": "water-skis",
+      "title": "Ski Sunday",
+      "description": "Collect the Water Skis and unlock water traversal"
+    },
+    {
+      "_id": "fire-extinguisher",
+      "title": "Safety First",
+      "description": "Find the Fire Extinguisher"
+    },
+    {
+      "_id": "fog-lamps",
+      "title": "Light Fog",
+      "description": "Collect the Fog Lamps"
+    },
+    {
+      "_id": "stop-watch",
+      "title": "Go for a Speed Run",
+      "description": "Collect the Stop Watch"
+    },
+    {
+      "_id": "moto-cross-tyres",
+      "title": "Kickstart",
+      "description": "Collect the Moto-Cross Tyres"
+    },
+    {
+      "_id": "personal-hi-fi",
+      "title": "Guns n Roses",
+      "description": "Collect the Personal Hi-Fi"
+    },
+    {
+      "_id": "electonic-ignition",
+      "title": "Gin and Tonic",
+      "description": "Collect the Electronic Ignition"
+    },
+    {
+      "_id": "rev-counter",
+      "title": "Revs",
+      "description": "Find the Rev. Counter"
+    },
+    {
+      "_id": "windshield",
+      "title": "Didn't we have one already?",
+      "description": "Collect the Wind Shield"
+    },
+    {
+      "_id": "entry-ticket",
+      "title": "No Tickets",
+      "description": "Obtain the Entry Ticket for the Drag Race"
+    },
+    {
+      "_id": "win-the-race",
+      "title": "No Second Prize",
+      "description": "Win the Drag Race and beat the game!"
+    }
+  ]
+}
