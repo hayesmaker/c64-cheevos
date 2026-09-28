@@ -224,7 +224,7 @@ class ActionBiker {
             return this.cpuReadNS(ITEM_COUNT) === 34
           }
           break
-        case 'kickStart':
+        case 'kickstart':
           checkFn = () => {
             return this.cpuReadNS(ITEM_COUNT) === 35
           }
@@ -326,7 +326,7 @@ class ActionBiker {
     }
     if ((
         !this.isGameOver &&
-        gameCompleted()
+        this.gameCompleted()
       ) ||
       (
         currentLives === 0 &&
