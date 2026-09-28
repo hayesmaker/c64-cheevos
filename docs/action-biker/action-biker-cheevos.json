@@ -148,6 +148,10 @@
       "description": "Collect the C.B Radio"
     },
     {
+	    "_id": "white-stripes",
+	    "title": "White Stripes",
+	    "description": "Get the Go Faster Sripes"
+    {
       "_id": "water-skis",
       "title": "Ski Sunday",
       "description": "Collect the Water Skis and unlock water traversal"

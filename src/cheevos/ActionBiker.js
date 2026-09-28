@@ -202,7 +202,9 @@ class ActionBiker {
           }
           break
         case 'whiteStripes':
-          return this.cpuReadNS(ITEM_COUNT) === 30
+          checkFn = () => {
+            return this.cpuReadNS(ITEM_COUNT) === 30
+          }
           break
         case 'skiSunday':
           checkFn = () => {
