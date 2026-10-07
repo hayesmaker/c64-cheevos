@@ -3,7 +3,7 @@ import { camelize, convertMemToScoreDigits } from '../helpers/string-utils.js'
 
 // Addresses from the Thrust (Firebird, 1986) disassembly:
 // https://github.com/hayesmaker/thrust-c64 (src/thrust.asm)
-const MEM_SCORE_1 = 0x0180      // score_A: low 2 digits, BCD
+const MEM_SCORE_1 = 0x0180      // score_A: low 2 digits, BCD (displayed with a trailing 0)
 const MEM_SCORE_2 = 0x0181      // score_B: mid 2 digits, BCD
 const MEM_SCORE_3 = 0x0182      // score_C: high 2 digits, BCD
 const MEM_LIVES = 0x9403        // lives: spare lives in BCD; wraps to $99 when the last life is lost
@@ -53,11 +53,13 @@ class Thrust {
     console.log(`${this.name}::Start New Game`, this.score, this.lives)
   }
 
+  // The status bar prints a fixed '0' after the 6 BCD digits, so the score
+  // shown on screen is the stored value x 10 (a gun is stored as $75 = 750).
   getScore() {
     const score3 = convertMemToScoreDigits(MEM_SCORE_3, this)
     const score2 = convertMemToScoreDigits(MEM_SCORE_2, this)
     const score1 = convertMemToScoreDigits(MEM_SCORE_1, this)
-    return parseInt(score3 + score2 + score1, 10)
+    return parseInt(score3 + score2 + score1, 10) * 10
   }
 
   // Raw BCD lives byte; bit 7 is set ($99) once the last life has been lost.

@@ -6,12 +6,14 @@ running (decrunched) program. Verified with `Thrust (J1).crt` (score and lives).
 
 | Address | Label | Notes |
 |---------|-------|-------|
-| `$0180`-`$0182` | `score_A`/`B`/`C` | Score, 3 bytes BCD, lowest byte first. Eg: `50 23 01` = 012350 |
+| `$0180`-`$0182` | `score_A`/`B`/`C` | Score, 3 bytes BCD, lowest byte first. The status bar adds a fixed `0` on the end, so `50 23 01` shows as 0123500 |
 | `$9403` | `lives` | Spare lives in BCD. A new game sets 4 and immediately takes one: `03`. Losing a life at `00` wraps to `99` (game over) |
 | `$9402` | `fuel_empty_flag` | Non-zero when out of fuel, which ends the game with lives left |
 | `$0063` | `demo_mode_flag` | `00` in a real game, `FF` on the title / high score screens and in the demo |
 
-An extra life is awarded every 10,000 points.
+Displayed points (stored value x 10): gun 750, fuel collected 300, fuel tank shot 150,
+mission bonus 400 per step. An extra life is awarded every 10,000 points on
+screen (each change of the stored thousands digit, the high nibble of `score_B`).
 
 ## Game flow
 

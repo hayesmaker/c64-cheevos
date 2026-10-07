@@ -88,7 +88,7 @@ describe('Thrust', () => {
     memory[ADDR.score2] = 0x23
     memory[ADDR.score3] = 0x01
     thrust.execute()
-    expect(thrust.score).toBe(12350)
+    expect(thrust.score).toBe(123500)
 
     memory[ADDR.lives] = 0x02
     thrust.execute()
@@ -117,9 +117,9 @@ describe('Thrust', () => {
 
     expect(thrust.lives).toBe(0)
     expect(gameOver).toHaveBeenCalledTimes(1)
-    expect(gameOver).toHaveBeenCalledWith({ score: 4500, highScore: 4500 })
+    expect(gameOver).toHaveBeenCalledWith({ score: 45000, highScore: 45000 })
     expect(postScore).toHaveBeenCalledTimes(1)
-    expect(postScore).toHaveBeenCalledWith('thrust-game', 4500, 'user1', 'player1')
+    expect(postScore).toHaveBeenCalledWith('thrust-game', 45000, 'user1', 'player1')
   })
 
   test('ends the game when out of fuel, even with lives left', () => {
@@ -135,7 +135,7 @@ describe('Thrust', () => {
     thrust.execute()
 
     expect(thrust.isGameOver).toBe(true)
-    expect(postScore).toHaveBeenCalledWith('thrust-game', 75, 'user1', 'player1')
+    expect(postScore).toHaveBeenCalledWith('thrust-game', 750, 'user1', 'player1')
 
     // Still on the game-over screen: lives are 3 and the score is non-zero,
     // so this must not count as a new game.
@@ -157,7 +157,7 @@ describe('Thrust', () => {
     thrust.execute()
 
     expect(thrust.isGameOver).toBe(true)
-    expect(postScore).toHaveBeenCalledWith('thrust-game', 20, 'user1', 'player1')
+    expect(postScore).toHaveBeenCalledWith('thrust-game', 200, 'user1', 'player1')
   })
 
   test('starts a second game after game over', () => {
