@@ -18,4 +18,5 @@ export const cheevosRegistry = {
   'uridium': () => import('./cheevos/Uridium.js'),
   'vegetables-deluxe': () => import('./cheevos/VegetablesDeluxe.js'),
   'action-biker': () => import('./cheevos/ActionBiker.js'),
+  'thrust': () => import('./cheevos/Thrust.js'),
 }
