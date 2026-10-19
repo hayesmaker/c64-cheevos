@@ -38,6 +38,7 @@ All games with achievement checkmarks have achievements that can be unlocked in 
 | Park Patrol            | `park-patrol`       | ❌           | ❌            |
 | Potty Pigeon           | `potty-pigeon`      | ✅           | ❌            |
 | Rainbow Islands        | `rainbow-islands    | ✅           | ✅            | 
+| Road Runner            | `road-runner`       | ✅           | ❌            |
 | Stix                   | `stix`              | ✅           | ❌            |
 | Tilt                   | `tilt`              | ✅           | ❌            |
 | Up 'n Down             | `up-n-down`         | ✅           | ❌            |
