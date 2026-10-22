@@ -20,4 +20,5 @@ export const cheevosRegistry = {
   'action-biker': () => import('./cheevos/ActionBiker.js'),
   'thrust': () => import('./cheevos/Thrust.js'),
   'road-runner': () => import('./cheevos/RoadRunner.js'),
+  'panther': () => import('./cheevos/Panther.js'),
 }
