@@ -34,6 +34,7 @@ All games with achievement checkmarks have achievements that can be unlocked in 
 | Legend of Wilf         | `legend-of-wilf`    | ✅           | ❌            |
 | Mario's Cement Factory | `mario-cf`          | ✅           | ✅            |
 | Mole Attack            | `mole-attack`       | ✅           | ❌            |
+| Panther                | `panther`           | ✅           | ❌            |
 | Munchy Worm            | `munchy-worm`       | ✅           | ❌            |
 | Park Patrol            | `park-patrol`       | ❌           | ❌            |
 | Potty Pigeon           | `potty-pigeon`      | ✅           | ❌            |
