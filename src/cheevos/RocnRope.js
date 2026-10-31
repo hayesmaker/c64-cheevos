@@ -7,6 +7,8 @@ const MEM_SCORE_3 = 0xa982
 const MEM_LIVES = 0xa983
 // const ROUND_NUMBER = 0x1166
 
+const GAME_OVER_LIVES = 0x00;
+
 class RocnRope {
   static ultimate = {
     pollIntervalMs: 1000,
@@ -76,13 +78,10 @@ class RocnRope {
   }
 
   getScore() {
-    const score1 = convertMemToScoreDigits(MEM_SCORE_1, this)
-    const score2 = convertMemToScoreDigits(MEM_SCORE_2, this)
-    const score3 = convertMemToScoreDigits(MEM_SCORE_3, this)
-
-
-
-    return parseInt(score1 + score2 + score3 + score4, 10)
+    const score1 = this.ramRead(MEM_SCORE_1);
+    const score2 = this.ramRead(MEM_SCORE_2);
+    const score3 = this.ramRead(MEM_SCORE_3);
+    return (score1 | (score2 << 8) | (score3 << 16)) >>> 0
   }
 
   // getRound() {
@@ -90,18 +89,18 @@ class RocnRope {
   // }
 
   getLives() {
-    return this.cpuReadNS(MEM_LIVES)
+    return this.ramRead(MEM_LIVES)
   }
 
   newGameCheck() {
     const lives = this.getLives()
     return this.isGameOver &&
-      lives === 2 &&
-      this.cpuReadNS(DIAMOND_COLLECTED) === 6
+      lives === 3;
+      // this.cpuReadNS(DIAMOND_COLLECTED) === 6
   }
 
   endGameCheck() {
-    return this.isGameInProgress && (this.getLives() === GAME_OVER_LIVES || this.gameCompleteCheck())
+    return this.isGameInProgress && (this.getLives() === GAME_OVER_LIVES)
   }
 
   execute() {
