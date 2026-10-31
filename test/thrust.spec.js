@@ -178,4 +178,29 @@ describe('Thrust', () => {
     expect(newGame).toHaveBeenCalledTimes(2)
     expect(thrust.isGameOver).toBe(false)
   })
+
+  test('does not submit a score for a game that ends on 0', () => {
+    const postScore = vi.fn().mockResolvedValue({})
+    // First boot: start_new_game runs with demo mode off, then shows the title.
+    const memory = {}
+    startGame(memory)
+    const thrust = createThrust(memory, { postScore })
+    const gameOver = listen(thrust, 'gameOver')
+
+    thrust.execute()
+    memory[ADDR.demoMode] = 0xff
+    thrust.execute()
+
+    expect(thrust.isGameOver).toBe(true)
+    expect(gameOver).not.toHaveBeenCalled()
+    expect(postScore).not.toHaveBeenCalled()
+
+    // A real game afterwards is still tracked and submitted.
+    startGame(memory)
+    thrust.execute()
+    memory[ADDR.score1] = 0x75
+    memory[ADDR.lives] = 0x99
+    thrust.execute()
+    expect(postScore).toHaveBeenCalledWith('thrust-game', 750, 'user1', 'player1')
+  })
 })

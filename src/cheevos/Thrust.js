@@ -123,6 +123,13 @@ class Thrust {
 
     if (this.gameOverCheck()) {
       this.isGameOver = true
+
+      // On first boot start_new_game runs once and then shows the title screen,
+      // which looks like a game that ended on 0. Never submit an empty game.
+      if (this.score === 0) {
+        return
+      }
+
       const newHighScore = this.score > this.highScore ? this.score : 0
       if (newHighScore) {
         this.highScore = this.score
